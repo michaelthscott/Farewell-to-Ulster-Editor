@@ -11,6 +11,10 @@ Versions follow [Semantic Versioning](https://semver.org): MAJOR.MINOR.PATCH. Ea
 
 - Moved the editor from the `Editor/` folder of [Farewell-to-Ulster](https://github.com/michaelthscott/Farewell-to-Ulster) into this repo, with its history. Scripts now run from the repo root as `scripts/release.sh` and `scripts/refresh-seed.sh`. Build numbers continue from 1.1.0's build 523.
 
+### Fixed
+
+- Silenced the build warning about opening documents in place. `Info.plist` now sets `LSSupportsOpeningDocumentsInPlace` to `false`, because the app exports its JSON document but never opens files.
+
 ## [1.1.0]
 
 ### Changed
