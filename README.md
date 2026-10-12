@@ -1,4 +1,4 @@
-This is the Xcode project for the app that I use on my iPhone to work on _Farewell to Ulster_.
+This is the Xcode project for the app that I use on my iPhone to work on _Farewell to Ulster_. The book itself, and the website built from it, live in [Farewell-to-Ulster](https://github.com/michaelthscott/Farewell-to-Ulster).
 
 ## Requirements
 
@@ -16,10 +16,10 @@ Debug builds always show version **1.0 (1)**. The real version number is only ap
 | Part | Where it comes from | Example |
 |---|---|---|
 | Version | Argument to `release.sh`, following [Semantic Versioning](https://semver.org) | `1.1.0` |
-| Build number | Number of commits on `main` (always increases) | `523` |
+| Build number | Number of commits on `main` plus 359 for the commits left in the site repo (always increases) | `523` |
 | Git tag | Created by `release.sh` after a successful install | `editor-v1.1.0` |
 
-Tags start with `editor-` so they aren't mistaken for versions of the book, which lives in the same repo.
+Tags start with `editor-` because the editor used to share a repo with the book. The prefix is kept so all releases are tagged the same way.
 
 How to choose the version number:
 
@@ -31,27 +31,27 @@ How to choose the version number:
 
 ## Release Checklist
 
-Run these from the repo root (`Farewell-to-Ulster`).
+Run these from the repo root (`Farewell-to-Ulster-Editor`).
 
 Before you start:
 
 - [ ] All work is committed on `main`.
-- [ ] `git pull`. The app commits book updates straight to GitHub, so your Mac is often behind.
+- [ ] `git pull`, in case anything was pushed from another machine.
 - [ ] Tests pass in Xcode (⌘U).
 - [ ] Pick the new version number using the table above. Check the last one with `git describe --tags --abbrev=0 --match 'editor-v*'`.
 
 Update the changelog:
 
-- [ ] In `Editor/CHANGELOG.md`, rename `## [Unreleased]` to `## [x.y.z]` and make sure it lists everything in this release.
+- [ ] In `CHANGELOG.md`, rename `## [Unreleased]` to `## [x.y.z]` and make sure it lists everything in this release.
 - [ ] Add a new empty `## [Unreleased]` section above it.
 - [ ] Commit: `git commit -am "Prepare x.y.z"`
 
 Release:
 
-- [ ] In the app on the iPhone, commit any updates you want to keep safe on GitHub. Installing keeps the app's data, but it's good to have a copy.
+- [ ] In the app on the iPhone, commit any updates you want to keep safe on GitHub. They go to the site repo, [Farewell-to-Ulster](https://github.com/michaelthscott/Farewell-to-Ulster). Installing keeps the app's data, but it's good to have a copy.
 - [ ] Unlock the iPhone and keep it connected by cable or on the same Wi-Fi as the Mac.
-- [ ] Run `Editor/scripts/release.sh x.y.z`. It tests, archives, signs, installs on the iPhone, and tags `editor-vx.y.z`.
-  - To install on another device, run `DEVICE=<identifier> Editor/scripts/release.sh x.y.z`. Find identifiers with `xcrun devicectl list devices`.
+- [ ] Run `scripts/release.sh x.y.z`. It refreshes the bundled seed data from the site repo (committing it if it changed), then tests, archives, signs, installs on the iPhone, and tags `editor-vx.y.z`.
+  - To install on another device, run `DEVICE=<identifier> scripts/release.sh x.y.z`. Find identifiers with `xcrun devicectl list devices`.
 
 Afterwards:
 
@@ -68,4 +68,6 @@ Afterwards:
 
 ## Signing
 
-Releases are signed with an Apple Development certificate (`Editor/scripts/ExportOptions.plist`, method `debugging`). They run on devices registered to the team, and the provisioning profile expires after a year, so make a new release before then.
+Releases are signed with an Apple Development certificate (`scripts/ExportOptions.plist`, method `debugging`). They run on devices registered to the team, and the provisioning profile expires after a year, so make a new release before then.
+
+`ExportOptions.plist` is ignored by git, so copy it into `scripts/` when you clone this repo on a new Mac.

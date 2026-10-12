@@ -2,7 +2,7 @@
 #
 # Refreshes the editor's bundled seed data from the canonical copy in the site repo.
 #
-# Usage: Editor/scripts/refresh-seed.sh
+# Usage: scripts/refresh-seed.sh
 #
 # The editor commits the book to _data/Farewell-to-Ulster.json in michaelthscott/Farewell-to-Ulster.
 # The copy in the asset catalog is only used to seed SwiftData on first launch (see Storage.loadData),

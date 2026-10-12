@@ -5,6 +5,12 @@ All notable changes to the Farewell to Ulster editor app are documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versions follow [Semantic Versioning](https://semver.org): MAJOR.MINOR.PATCH. Each release is tagged `editor-vMAJOR.MINOR.PATCH`.
 
+## [Unreleased]
+
+### Changed
+
+- Moved the editor from the `Editor/` folder of [Farewell-to-Ulster](https://github.com/michaelthscott/Farewell-to-Ulster) into this repo, with its history. Scripts now run from the repo root as `scripts/release.sh` and `scripts/refresh-seed.sh`. Build numbers continue from 1.1.0's build 523.
+
 ## [1.1.0]
 
 ### Changed

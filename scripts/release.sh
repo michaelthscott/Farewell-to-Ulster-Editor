@@ -2,25 +2,28 @@
 #
 # Builds, archives, and installs a versioned release of the Farewell to Ulster editor on an iPhone.
 #
-# Usage: Editor/scripts/release.sh <major.minor.patch>      e.g. Editor/scripts/release.sh 1.1.0
-#        DEVICE=<udid|name> Editor/scripts/release.sh 1.1.0   to install on a different device
+# Usage: scripts/release.sh <major.minor.patch>      e.g. scripts/release.sh 1.1.0
+#        DEVICE=<udid|name> scripts/release.sh 1.1.0   to install on a different device
 #
 # Versioning scheme:
 #   - Version (CFBundleShortVersionString) comes from the argument and is recorded as git tag editor-v<version>.
-#     The "editor-" prefix keeps these tags apart from the book itself, which lives in the same repo.
-#   - Build number (CFBundleVersion) is the commit count on HEAD, so it always increases on main.
+#     The "editor-" prefix dates from when the book and the editor shared a repo, and is kept for continuity.
+#   - Build number (CFBundleVersion) is the commit count on HEAD plus BUILD_OFFSET, so it always increases on main.
 #
 # The archive is saved to Xcode's Archives folder, so each release (with its dSYMs) shows up
 # in Window > Organizer and can be reinstalled from there if you need to roll back.
 
 set -euo pipefail
 
-PROJECT="Editor/FarewellToUlster/FarewellToUlster.xcodeproj"
+PROJECT="FarewellToUlster/FarewellToUlster.xcodeproj"
 SCHEME="FarewellToUlster"
 APP_NAME="FarewellToUlster.app"
 TEST_DESTINATION="platform=iOS Simulator,name=iPhone 17"
 # Michael Scott's iPhone 16. Run `xcrun devicectl list devices` to find other identifiers.
 DEVICE="${DEVICE:-00008140-0006681E0AD1801C}"
+# Commits that stayed behind in michaelthscott/Farewell-to-Ulster when the editor moved to its own repo.
+# Adding them keeps build numbers continuous: editor-v1.1.0 was build 523 before and after the move.
+BUILD_OFFSET=359
 
 die() { echo "error: $*" >&2; exit 1; }
 step() { echo; echo "==> $*"; }
@@ -38,23 +41,23 @@ if git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
     die "tag $TAG already exists"
 fi
 
-# The editor commits book updates straight to origin/main, so the local branch is often behind.
+# Make sure the release includes everything pushed from other machines.
 git fetch -q origin main
 BEHIND="$(git rev-list --count HEAD..origin/main)"
 [[ "$BEHIND" -eq 0 ]] || die "main is $BEHIND commit(s) behind origin/main, run git pull first"
 
 # Bundle the latest book as the first-launch seed, committed so the release still maps to an exact commit.
 step "Refreshing seed data"
-Editor/scripts/refresh-seed.sh
-SEED="Editor/FarewellToUlster/FarewellToUlster/Assets.xcassets/Farewell-to-Ulster.dataset/Farewell-to-Ulster.json"
+scripts/refresh-seed.sh
+SEED="FarewellToUlster/FarewellToUlster/Assets.xcassets/Farewell-to-Ulster.dataset/Farewell-to-Ulster.json"
 if ! git diff --quiet -- "$SEED"; then
     git commit -q -m "Refresh seed data" -- "$SEED"
     echo "Committed refreshed seed data"
 fi
 
-BUILD="$(git rev-list --count HEAD)"
+BUILD="$(( $(git rev-list --count HEAD) + BUILD_OFFSET ))"
 ARCHIVE="$HOME/Library/Developer/Xcode/Archives/$(date +%Y-%m-%d)/$SCHEME $VERSION ($BUILD).xcarchive"
-EXPORT_DIR="Editor/build/release/$VERSION"
+EXPORT_DIR="build/release/$VERSION"
 
 echo "Releasing $SCHEME $VERSION (build $BUILD) from $(git rev-parse --short HEAD)"
 
@@ -82,7 +85,7 @@ rm -rf "$EXPORT_DIR"
 xcodebuild -exportArchive \
     -archivePath "$ARCHIVE" \
     -exportPath "$EXPORT_DIR" \
-    -exportOptionsPlist Editor/scripts/ExportOptions.plist \
+    -exportOptionsPlist scripts/ExportOptions.plist \
     -allowProvisioningUpdates \
     -quiet
 
