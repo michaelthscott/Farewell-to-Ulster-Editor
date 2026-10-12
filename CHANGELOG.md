@@ -5,6 +5,13 @@ All notable changes to the Farewell to Ulster editor app are documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versions follow [Semantic Versioning](https://semver.org): MAJOR.MINOR.PATCH. Each release is tagged `editor-vMAJOR.MINOR.PATCH`.
 
+## [Unreleased]
+
+### Changed
+
+- The Poems tab's search tokens are filtered by `PoemSearchToken.filter(_:)` in place of a private function in `PoemsTab`, and each token now has a unit test.
+- The duplicate title token counts titles once, in place of fetching every poem again for each poem in the list.
+
 ## [1.1.1]
 
 ### Changed

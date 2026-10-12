@@ -57,41 +57,10 @@ struct PoemsTab: View {
         return "Poems"
     }
     
-    func overUsed(title: String) -> Bool {
-        storage.poems.filter { $0.title == title }.count > 1
-    }
-
     private func filteredPoems(token: PoemSearchToken?) -> [Poem] {
-        guard let token else { return storage.poems }
-        switch token {
-        case .status(let status):
-            return storage.poems.filter { poem in
-                guard let poemStatus = poem.status else { return false }
-                return poemStatus == status
-            }
-        case .category(let category):
-            return storage.poems.filter { poem in
-                guard let poemCategory = poem.category else { return false }
-                return poemCategory == category
-            }
-        case .uncategorised:
-            return storage.poems.filter { poem in
-                poem.isCategorised == false
-            }
-        case .noSubjects:
-            return storage.poems.filter { poem in
-                guard let subjects = poem.subjects else { return true }
-                return subjects.isEmpty
-            }
-        case .duplicateTitle:
-            return storage.poems.filter { poem in
-                overUsed(title: poem.title)
-            }
-        case .firstLineTitle:
-            return storage.poems.filter { poem in
-                poem.titleIsFirstLine
-            }
-        }
+        let poems = storage.poems
+        guard let token else { return poems }
+        return token.filter(poems)
     }
     
     var selectedPoems: [Poem] {

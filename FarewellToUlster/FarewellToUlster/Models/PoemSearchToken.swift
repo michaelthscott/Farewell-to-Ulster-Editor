@@ -87,3 +87,25 @@ extension PoemSearchToken: CustomStringConvertible {
 }
 
 extension PoemSearchToken: Equatable {}
+
+extension PoemSearchToken {
+    /// Return the poems that match this token, keeping their order.
+    func filter(_ poems: [Poem]) -> [Poem] {
+        switch self {
+        case .status(let status):
+            return poems.filter { $0.status == status }
+        case .category(let category):
+            return poems.filter { $0.category == category }
+        case .uncategorised:
+            return poems.filter { !$0.isCategorised }
+        case .noSubjects:
+            return poems.filter { $0.subjects?.isEmpty ?? true }
+        case .duplicateTitle:
+            // Count the titles once, rather than rescanning the poems for each one.
+            let titleCounts = Dictionary(poems.map { ($0.title, 1) }, uniquingKeysWith: +)
+            return poems.filter { titleCounts[$0.title, default: 0] > 1 }
+        case .firstLineTitle:
+            return poems.filter { $0.titleIsFirstLine }
+        }
+    }
+}
