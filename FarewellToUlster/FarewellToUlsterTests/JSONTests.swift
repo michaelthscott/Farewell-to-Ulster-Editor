@@ -70,6 +70,6 @@ struct JSONTests {
         let regex = /^\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}\.json$/
         #expect(file.fileName.wholeMatch(of: regex) != nil)
         #expect(file.contentType.description == "public.json")
-        #expect(try file.document.snapshot(contentType: file.contentType).isEmpty == false)
+        #expect(file.document.data.isEmpty == false)
     }
 }

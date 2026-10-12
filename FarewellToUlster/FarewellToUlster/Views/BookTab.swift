@@ -16,13 +16,25 @@ import UniformTypeIdentifiers
 struct BookTab: View {
     @Environment(Navigation.self) private var navigation
     @Environment(Storage.self) private var storage
-    @State private var showExporter: Bool = false
-    @State private var document: Document?
-    @State private var contentType: UTType = .pdf
-    @State private var defaultFileName: String = "Untitled"
+    @State private var export: Export?
     @State private var isCommittingUpdate: Bool = false
     @State private var showGitHubSettings: Bool = false
     @State private var outcome: CommitOutcome?
+
+    /// A rendered file waiting to be saved, with the type and name to save it under.
+    private struct Export {
+        let document: Document
+        let contentType: UTType
+        let fileName: String
+    }
+
+    /// Drives the file exporter, clearing the export when the exporter is dismissed.
+    private var showExporter: Binding<Bool> {
+        Binding(
+            get: { export != nil },
+            set: { if !$0 { export = nil } }
+        )
+    }
 
     /// Drives the outcome alert, clearing the outcome when the alert is dismissed.
     private var showOutcome: Binding<Bool> {
@@ -98,7 +110,7 @@ struct BookTab: View {
                             }
                     }
                 }
-                .fileExporter(isPresented: $showExporter, document: document, contentType: contentType, defaultFilename: defaultFileName) { result in
+                .fileExporter(isPresented: showExporter, document: export?.document, contentType: export?.contentType ?? .pdf, defaultFilename: export?.fileName) { result in
                     switch result {
                     case .success(let url):
                         print("Saved to \(url)")
@@ -118,11 +130,8 @@ struct BookTab: View {
             return
         }
 
-        guard let data = try? jsonFile.document.snapshot(contentType: jsonFile.contentType) else {
-            outcome.record(target: "JSON file", message: "Could not encode the JSON file.")
-            return
-        }
-        
+        let data = jsonFile.document.data
+
         // The canonical copy lives with the site. The app's bundled copy is only a
         // first-launch seed, refreshed from here by scripts/refresh-seed.sh.
         let localFile = LocalFile(path: "_data/Farewell-to-Ulster.json", content: data)
@@ -177,10 +186,9 @@ struct BookTab: View {
         guard let book = storage.book else { return }
         let renderer = PDFRenderer()
         let data: Data = await renderer.render(pages: Pages(storage: storage).pages)
-        document = Document(data: data)
-        contentType = .pdf
-        defaultFileName = book.title.replacingOccurrences(of: " ", with: "-") + ".pdf"
-        showExporter = true
+        export = Export(document: Document(data: data),
+                        contentType: .pdf,
+                        fileName: book.title.replacingOccurrences(of: " ", with: "-") + ".pdf")
     }
 }
 

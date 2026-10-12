@@ -5,45 +5,30 @@
 //  Created by Michael Scott on 13/05/2026.
 //
 
-//TODO: Initialise with Book.
-
 import Foundation
 import SwiftUI
 import UniformTypeIdentifiers
-import Synchronization
-import Combine
 
-extension UTType {
-    nonisolated static var jsonBook: UTType {
-        UTType(importedAs: "org.michaelthscott.json")
-    }
-}
-
-final class Document: ReferenceFileDocument {
-    struct DocumentStorage {
-        var contents: Data
-    }
-    
+/// Pre-rendered file contents (JSON or PDF) handed to `fileExporter`.
+struct Document: FileDocument {
     static let readableContentTypes: [UTType] = []
-    static let writableContentTypes: [UTType] = [UTType.jsonBook, UTType.pdf]
-    let storage: Mutex<DocumentStorage>
+    static let writableContentTypes: [UTType] = [.json, .pdf]
+
+    let data: Data
 
     init(data: Data) {
-        self.storage = .init(.init(contents: data))
+        self.data = data
     }
-    
-    required init(configuration: ReadConfiguration) throws {
+
+    /// Required by `FileDocument`, but never called: the app only exports, so `readableContentTypes` is empty.
+    init(configuration: ReadConfiguration) throws {
         guard let data = configuration.file.regularFileContents else {
             throw CocoaError(.fileReadCorruptFile)
         }
-        self.storage = .init(.init(contents: data))
+        self.data = data
     }
-    
-    func snapshot(contentType: UTType) throws -> Data {
-        storage.withLock { $0.contents }
-    }
-    
-    func fileWrapper(snapshot: Data, configuration: WriteConfiguration) throws -> FileWrapper {
-        FileWrapper(regularFileWithContents: snapshot)
+
+    func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
+        FileWrapper(regularFileWithContents: data)
     }
 }

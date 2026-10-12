@@ -60,7 +60,7 @@ struct JSONFile {
     }
     
     var contentType: UTType {
-        .jsonBook
+        .json
     }
     
     var fileName: String {
