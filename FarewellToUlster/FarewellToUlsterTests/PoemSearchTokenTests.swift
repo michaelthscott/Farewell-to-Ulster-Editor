@@ -8,11 +8,6 @@
 import Testing
 @testable import FarewellToUlster
 
-//uncategorised
-//case noSubjects
-//case duplicateTitle
-//case firstLineTitle
-
 struct PoemSearchTokenTests {
 
     @Test func testAllCases() async throws {
