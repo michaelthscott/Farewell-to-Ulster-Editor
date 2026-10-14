@@ -11,7 +11,9 @@ import UniformTypeIdentifiers
 
 /// Display and edit a poem.
 struct PoemEditor: View {
-    @Environment(Storage.self) private var storage
+    @Query private var eras: [Era]
+    @Query private var events: [Event]
+    @Query private var subjects: [Subject]
     let poem: Poem
     @State private var editedTitle = ""
     @State private var editedText = ""
@@ -38,15 +40,15 @@ struct PoemEditor: View {
                                 .foregroundColor(.secondary)
                                 .tag(Optional<Era>(nil))
                         }
-                        ForEach(storage.eras) { era in
+                        ForEach(eras.sorted()) { era in
                             Text(era.title).tag(Optional(era))
                         }
                     }
                     .labelsHidden()
                 }
             }
-            ItemsPicker<Event>(items: storage.events, selection: $selectedEvents)
-            ItemsPicker<Subject>(items: storage.subjects, selection: $selectedSubjects)
+            ItemsPicker<Event>(items: events.sorted(), selection: $selectedEvents)
+            ItemsPicker<Subject>(items: subjects.sorted(), selection: $selectedSubjects)
             Section("Category") {
                 Picker("Category", selection: $selectedCategory) {
                     if selectedCategory == nil {
