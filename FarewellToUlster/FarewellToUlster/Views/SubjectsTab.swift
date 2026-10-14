@@ -13,6 +13,7 @@ struct SubjectsTab: View {
     @Environment(Navigation.self) private var navigation
     @Environment(Storage.self) private var storage
     @Environment(\.dismiss) private var dismiss
+    @Query private var subjects: [Subject]
     @State private var selectedCategory: SubjectCategory?
     @State private var showOrdering: Bool = false
     @State private var addFailed: Bool = false
@@ -96,13 +97,15 @@ struct SubjectsTab: View {
     }
     
     var filteredSubjects: [Subject] {
-        guard let category = selectedCategory else { return storage.subjects }
-        return storage.subjects.filter({ $0.category == category })
+        // Sorted in memory, so the order matches Subject's Comparable conformance.
+        let sortedSubjects = subjects.sorted()
+        guard let category = selectedCategory else { return sortedSubjects }
+        return sortedSubjects.filter({ $0.category == category })
     }
 
     private func addSubject() {
         withAnimation {
-            let index = storage.subjects.count
+            let index = subjects.count
             let newSubject = Subject()
             do {
                 try storage.insertOrdered(newSubject)
