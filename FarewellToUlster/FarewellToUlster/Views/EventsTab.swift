@@ -12,6 +12,7 @@ import SwiftData
 struct EventsTab: View {
     @Environment(Navigation.self) private var navigation
     @Environment(Storage.self) private var storage
+    @Query private var events: [Event]
     @State private var addFailed: Bool = false
     @State private var addError: String = ""
     @State private var searchText = ""
@@ -74,8 +75,10 @@ struct EventsTab: View {
     }
     
     var filteredEvents: [Event] {
-        guard let selectedEra = navigation.selectedEra else { return storage.events }
-        return storage.events.filter { event in
+        // Sorted in memory, so the order matches Event's Comparable conformance.
+        let sortedEvents = events.sorted()
+        guard let selectedEra = navigation.selectedEra else { return sortedEvents }
+        return sortedEvents.filter { event in
             selectedEra.period.contains(event.period.start)
         }
     }
