@@ -9,7 +9,7 @@ Versions follow [Semantic Versioning](https://semver.org): MAJOR.MINOR.PATCH. Ea
 
 ### Changed
 
-- The app passes its SwiftData container to SwiftUI, so views can use `@Query`. The Eras tab is the first to do so: its list no longer fetches every era on each redraw, and it updates as soon as an era is added or deleted.
+- The app passes its SwiftData container to SwiftUI, so views can use `@Query`. The Eras, Events, Subjects and Poems tabs, the poem editor's pickers and the subject ordering sheet now do so. Their lists no longer fetch everything on each redraw, and they update as soon as an item is added or deleted.
 
 ## [1.1.2]
 
