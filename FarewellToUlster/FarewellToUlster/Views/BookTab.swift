@@ -147,7 +147,7 @@ struct BookTab: View {
             if outcome.needsToken { return }
         }
 
-        for era in storage.eras.sorted() {
+        for era in storage.eras {
             // An era with no poems has nothing to write, but still counts towards the
             // total so the summary matches the number of eras in the book.
             guard let poems = era.poems else {
