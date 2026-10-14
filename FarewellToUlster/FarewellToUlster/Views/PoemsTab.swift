@@ -12,6 +12,7 @@ import SwiftData
 struct PoemsTab: View {
     @Environment(Navigation.self) private var navigation
     @Environment(Storage.self) private var storage
+    @Query private var poems: [Poem]
     @State private var searchText = ""
     @State private var allTokens: [PoemSearchToken] = PoemSearchToken.allCases
     @State private var currentTokens: [PoemSearchToken] = []
@@ -57,8 +58,8 @@ struct PoemsTab: View {
         return "Poems"
     }
     
+    // Not sorted here, because selectedPoems sorts the poems after filtering them.
     private func filteredPoems(token: PoemSearchToken?) -> [Poem] {
-        let poems = storage.poems
         guard let token else { return poems }
         return token.filter(poems)
     }
