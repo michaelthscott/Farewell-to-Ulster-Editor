@@ -5,6 +5,12 @@ All notable changes to the Farewell to Ulster editor app are documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versions follow [Semantic Versioning](https://semver.org): MAJOR.MINOR.PATCH. Each release is tagged `editor-vMAJOR.MINOR.PATCH`.
 
+## [Unreleased]
+
+### Changed
+
+- The app passes its SwiftData container to SwiftUI, so views can use `@Query`. The Eras tab is the first to do so: its list no longer fetches every era on each redraw, and it updates as soon as an era is added or deleted.
+
 ## [1.1.2]
 
 ### Changed

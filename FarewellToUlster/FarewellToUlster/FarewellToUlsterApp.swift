@@ -20,6 +20,7 @@ struct FarewellToUlsterApp: App {
                 ContentView()
                     .environment(navigation)
                     .environment(storage)
+                    .modelContainer(storage.container)
             } else if let message {
                 Text(message)
             } else {

@@ -12,6 +12,7 @@ import SwiftData
 struct ErasTab: View {
     @Environment(Navigation.self) private var navigation
     @Environment(Storage.self) private var storage
+    @Query private var eras: [Era]
     @State private var addFailed: Bool = false
     @State private var addError: String = ""
     @State private var searchText = ""
@@ -67,8 +68,10 @@ struct ErasTab: View {
     }
     
     var selectedEras: [Era] {
-        guard !searchText.isEmpty else { return storage.eras }
-        return storage.eras.filter { era in
+        // Sorted in memory, so the order matches Era's Comparable conformance.
+        let sortedEras = eras.sorted()
+        guard !searchText.isEmpty else { return sortedEras }
+        return sortedEras.filter { era in
             era.title.localizedCaseInsensitiveContains(searchText)
         }
     }
