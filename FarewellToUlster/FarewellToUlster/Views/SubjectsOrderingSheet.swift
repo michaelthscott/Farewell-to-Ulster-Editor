@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct SubjectsOrderingSheet: View {
-    @Environment(Storage.self) private var storage
+    @Query private var allSubjects: [Subject]
     @Environment(\.editMode) var editMode
     @Environment(\.dismiss) private var dismiss
     @State private var subjects: [Subject] = []
@@ -48,7 +48,8 @@ struct SubjectsOrderingSheet: View {
         }
         .onAppear() {
             editMode?.wrappedValue = .active
-            initialSortedSubjects = storage.subjects.sorted(using: [SortDescriptor(\.sortIndex)])
+            // Sorting by title first keeps subjects with the same sortIndex in title order.
+            initialSortedSubjects = allSubjects.sorted().sorted(using: [SortDescriptor(\.sortIndex)])
             subjects = initialSortedSubjects
         }
     }
