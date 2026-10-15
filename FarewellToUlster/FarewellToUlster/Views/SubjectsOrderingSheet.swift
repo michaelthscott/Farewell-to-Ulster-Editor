@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct SubjectsOrderingSheet: View {
+    @Environment(Storage.self) private var storage
     @Query private var allSubjects: [Subject]
     @Environment(\.editMode) var editMode
     @Environment(\.dismiss) private var dismiss
@@ -34,6 +35,7 @@ struct SubjectsOrderingSheet: View {
                     for index in subjects.indices {
                         subjects[index].sortIndex = index
                     }
+                    storage.save()
                     dismiss()
                 }, label: {
                     Text("Save")

@@ -38,6 +38,8 @@ struct EditorDelete: ToolbarContent {
                         if let action {
                             action()
                         }
+                        // Write the deletion now, rather than leaving it to autosave.
+                        storage.save()
                         dismiss()
                     }
                 }

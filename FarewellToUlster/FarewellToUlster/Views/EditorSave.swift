@@ -10,6 +10,7 @@ import SwiftUI
 /// Save button for an editor.
 struct EditorSave: ToolbarContent {
     @Environment(\.dismiss) private var dismiss
+    @Environment(Storage.self) private var storage
     let needsSave: Bool
     let save: () -> Void
 
@@ -18,6 +19,8 @@ struct EditorSave: ToolbarContent {
             Button("Save", role: .destructive) {
                 withAnimation {
                     save()
+                    // Write the edits now, rather than leaving them to autosave.
+                    storage.save()
                 }
             }
             .disabled(!needsSave)
@@ -26,7 +29,8 @@ struct EditorSave: ToolbarContent {
     }
 }
 
-#Preview("Needs save") {
+#if DEBUG
+#Preview("Needs save", traits: .sampleData) {
     NavigationStack {
         Form {
             Text("ABC")
@@ -39,7 +43,7 @@ struct EditorSave: ToolbarContent {
     }
 }
 
-#Preview("Doesn't need save") {
+#Preview("Doesn't need save", traits: .sampleData) {
     NavigationStack {
         Form {
             Text("ABC")
@@ -51,3 +55,4 @@ struct EditorSave: ToolbarContent {
         }
     }
 }
+#endif
