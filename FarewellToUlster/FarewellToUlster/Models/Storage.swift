@@ -11,9 +11,9 @@ import UIKit
 
 /// An error that can be encountered while creating or reading the storage. Each case keeps the underlying error, if any, so the failure can be diagnosed.
 enum StorageError: LocalizedError, CustomStringConvertible {
-    case noModelContainer(underlying: Error)
+    case noModelContainer(underlying: any Error)
     case missingAsset(name: String)
-    case invalidAsset(name: String, underlying: Error)
+    case invalidAsset(name: String, underlying: any Error)
     case noBook
 
     var description: String {
@@ -39,7 +39,7 @@ enum StorageError: LocalizedError, CustomStringConvertible {
 @Observable final class Storage {
     let container: ModelContainer
     /// The most recent error from save(). ContentView shows it in an alert and then clears it.
-    var saveError: Error?
+    var saveError: (any Error)?
     /// References in the JSON that didn't match any era, event or subject, and so were left out when the book was loaded.
     /// ContentView shows them in an alert and then clears them.
     var loadWarnings: [String] = []
