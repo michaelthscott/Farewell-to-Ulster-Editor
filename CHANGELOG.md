@@ -11,6 +11,11 @@ Versions follow [Semantic Versioning](https://semver.org): MAJOR.MINOR.PATCH. Ea
 
 - The app passes its SwiftData container to SwiftUI, so views can use `@Query`. The Eras, Events, Subjects and Poems tabs, the poem editor's pickers and the subject ordering sheet now do so. Their lists no longer fetch everything on each redraw, and they update as soon as an item is added or deleted.
 
+### Fixed
+
+- Edits are saved as soon as you tap Save in an editor, delete an item, or save a new subject order. Before, these changes were only written when SwiftData's autosave next ran. A failed save now shows a "Save failed" alert.
+- A new subject's sort position is saved along with the subject. Before, it was set after the save and left to autosave.
+
 ## [1.1.2]
 
 ### Changed
