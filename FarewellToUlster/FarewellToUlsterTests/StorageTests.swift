@@ -5,7 +5,9 @@
 //  Created by Michael Scott on 13/05/2026.
 //
 
+import Foundation
 import Testing
+import SwiftData
 @testable import FarewellToUlster
 
 struct StorageTests {
@@ -42,5 +44,20 @@ struct StorageTests {
 
     @Test func testNoBook() throws {
         #expect(Storage.testStorage(with: "NoBook") == nil)
+    }
+
+    @Test func testSave() throws {
+        let storage = try #require(Storage.testStorage(with: "SmallBook"))
+        let poem = try #require(storage.poems.first)
+        let uuid = poem.uuid
+        poem.title = "Saved title"
+        storage.save()
+        #expect(storage.saveError == nil)
+        #expect(!storage.container.mainContext.hasChanges)
+        // A separate context only sees what has been written to the store.
+        let otherContext = ModelContext(storage.container)
+        let descriptor = FetchDescriptor<Poem>(predicate: #Predicate { $0.uuid == uuid })
+        let savedPoem = try #require(try otherContext.fetch(descriptor).first)
+        #expect(savedPoem.title == "Saved title")
     }
 }

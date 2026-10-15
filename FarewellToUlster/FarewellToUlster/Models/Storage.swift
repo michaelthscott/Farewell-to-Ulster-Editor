@@ -17,6 +17,8 @@ enum StorageError: Error {
 /// SwiftData storage that is initialised from JSON data.
 @Observable final class Storage {
     let container: ModelContainer
+    /// The most recent error from save(). ContentView shows it in an alert and then clears it.
+    var saveError: Error?
     
     init(isStoredInMemoryOnly: Bool = false, assetName: String = "Farewell-to-Ulster", bundle: Bundle = Bundle.main) throws {
         let schema = Schema([
@@ -139,5 +141,16 @@ enum StorageError: Error {
 extension Storage {
     func delete(_ model: any PersistentModel) {
         container.mainContext.delete(model)
+    }
+
+    /// Save any pending changes now, rather than waiting for autosave.
+    /// A failure is kept in saveError, so it can be reported even if the calling view has been dismissed.
+    func save() {
+        guard container.mainContext.hasChanges else { return }
+        do {
+            try container.mainContext.save()
+        } catch {
+            saveError = error
+        }
     }
 }

@@ -41,6 +41,19 @@ struct ContentView: View {
                 PoemsTab()
             }
         }
+        .alert("Save failed: \(storage.saveError?.localizedDescription ?? "")", isPresented: saveFailed) {
+            Button("Ok", role: .cancel) {
+                storage.saveError = nil
+            }
+        }
+    }
+
+    /// Presents the alert while Storage holds a save error, and clears the error when the alert is dismissed.
+    private var saveFailed: Binding<Bool> {
+        Binding(
+            get: { storage.saveError != nil },
+            set: { if !$0 { storage.saveError = nil } }
+        )
     }
 }
 
