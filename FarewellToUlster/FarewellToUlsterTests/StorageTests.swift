@@ -106,6 +106,28 @@ struct StorageTests {
         #expect(try otherContext.fetchCount(FetchDescriptor<Poem>()) == 6)
     }
 
+    @Test func testExportFromStorage() throws {
+        let storage = try #require(Storage.testStorage(with: "SmallBook"))
+        let file = try JSONFile(storage: storage)
+        #expect(file.jsonBook.title == "The Blue Dawn")
+        #expect(file.jsonBook.eras.count == 3)
+        #expect(file.jsonBook.events.count == 3)
+        #expect(file.jsonBook.subjects.count == 3)
+        #expect(file.jsonBook.poems.count == 6)
+        // One page for the book, one for each of the 3 eras, and one for each of the 6 poems.
+        #expect(try Pages(storage: storage).allPages().count == 10)
+    }
+
+    @Test func testExportWithoutBookThrows() throws {
+        let storage = try #require(Storage.testStorage(with: "SmallBook"))
+        storage.delete(try storage.fetchBook())
+        storage.save()
+        // Export stops with an error, rather than producing a file or PDF without the book.
+        #expect(throws: StorageError.self) { _ = try JSONFile(storage: storage) }
+        #expect(throws: StorageError.self) { _ = try Pages(storage: storage).allPages() }
+        #expect(StorageError.noBook.localizedDescription == "There is no book in the storage")
+    }
+
     @Test func testSave() throws {
         let storage = try #require(Storage.testStorage(with: "SmallBook"))
         let poem = try #require(storage.poems.first)

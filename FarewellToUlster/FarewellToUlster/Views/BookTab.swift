@@ -20,6 +20,7 @@ struct BookTab: View {
     @State private var isCommittingUpdate: Bool = false
     @State private var showGitHubSettings: Bool = false
     @State private var outcome: CommitOutcome?
+    @State private var exportError: String?
 
     /// A rendered file waiting to be saved, with the type and name to save it under.
     private struct Export {
@@ -41,6 +42,14 @@ struct BookTab: View {
         Binding(
             get: { outcome != nil },
             set: { if !$0 { outcome = nil } }
+        )
+    }
+
+    /// Drives the PDF export error alert, clearing the error when the alert is dismissed.
+    private var showExportError: Binding<Bool> {
+        Binding(
+            get: { exportError != nil },
+            set: { if !$0 { exportError = nil } }
         )
     }
 
@@ -99,6 +108,11 @@ struct BookTab: View {
                 } message: { outcome in
                     Text(outcome.message)
                 }
+                .alert("PDF export failed", isPresented: showExportError, presenting: exportError) { _ in
+                    Button("OK", role: .cancel) { }
+                } message: { message in
+                    Text(message)
+                }
                 .sheet(isPresented: $showGitHubSettings) {
                     NavigationStack {
                         GitHubSettingsView()
@@ -125,8 +139,15 @@ struct BookTab: View {
         var outcome = CommitOutcome()
         defer { self.outcome = outcome }
 
-        guard let jsonFile = JSONFile(storage: storage) else {
-            outcome.record(target: "JSON file", message: "Could not build the JSON file.")
+        // Fetch everything before committing anything, so a failed fetch stops the update
+        // rather than committing a book with parts missing.
+        let jsonFile: JSONFile
+        let eras: [Era]
+        do {
+            jsonFile = try JSONFile(storage: storage)
+            eras = try storage.fetchEras()
+        } catch {
+            outcome.record(target: "JSON file", message: "Could not build the JSON file: \(error.localizedDescription)")
             return
         }
 
@@ -147,7 +168,7 @@ struct BookTab: View {
             if outcome.needsToken { return }
         }
 
-        for era in storage.eras {
+        for era in eras {
             // An era with no poems has nothing to write, but still counts towards the
             // total so the summary matches the number of eras in the book.
             guard let poems = era.poems else {
@@ -183,9 +204,17 @@ struct BookTab: View {
     }
 
     private func exportPDF() async {
-        guard let book = storage.book else { return }
+        let book: Book
+        let pages: [Page]
+        do {
+            book = try storage.fetchBook()
+            pages = try Pages(storage: storage).allPages()
+        } catch {
+            exportError = error.localizedDescription
+            return
+        }
         let renderer = PDFRenderer()
-        let data: Data = await renderer.render(pages: Pages(storage: storage).pages)
+        let data: Data = await renderer.render(pages: pages)
         export = Export(document: Document(data: data),
                         contentType: .pdf,
                         fileName: book.title.replacingOccurrences(of: " ", with: "-") + ".pdf")

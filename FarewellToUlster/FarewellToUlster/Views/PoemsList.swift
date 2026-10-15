@@ -29,7 +29,7 @@ struct PoemsList: View {
 #Preview(traits: .sampleData) {
     @Previewable @State var navigation = Navigation()
     @Previewable @Environment(Storage.self) var storage
-    var poems = storage.poems
+    var poems = try! storage.fetchPoems()
     poems.insert(poems[0], at: 1)
     return NavigationStack(path: $navigation.poemsPath) {
         PoemsList(poems: Array(poems[1...2]))

@@ -50,7 +50,7 @@ struct EventEditor: View {
     @Previewable @State var navigation = Navigation()
     @Previewable @Environment(Storage.self) var storage
     NavigationStack {
-        EventEditor(event: storage.events.first!)
+        EventEditor(event: try! storage.fetchEvents().first!)
             .navigationDestination(for: Path.self) { path in
                 DestinationView(path: path)
             }

@@ -38,7 +38,7 @@ struct DestinationView: View {
 #Preview(traits: .sampleData) {
     @Previewable @State var navigation = Navigation()
     @Previewable @Environment(Storage.self) var storage
-    DestinationView(path: .poem(storage.poems.first!))
+    DestinationView(path: .poem(try! storage.fetchPoems().first!))
         .environment(navigation)
 }
 #endif

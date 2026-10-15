@@ -10,8 +10,9 @@ import Foundation
 struct Pages {
     let storage: Storage
     
-    func pages(for era: Era) -> [Page] {
-        guard let book = storage.book else { return [] }
+    // These throw rather than returning no pages, so a failed fetch can't be mistaken for an empty book.
+    func pages(for era: Era) throws -> [Page] {
+        let book = try storage.fetchBook()
         var pages: [Page] = []
         var pageNumber: Int = 1
         pages.append(Page(type: .era(book, era), number: pageNumber))
@@ -23,12 +24,12 @@ struct Pages {
         return pages
     }
     
-    var pages: [Page] {
-        guard let book = storage.book else { return [] }
+    func allPages() throws -> [Page] {
+        let book = try storage.fetchBook()
         var pages: [Page] = []
         var pageNumber: Int = 1
         pages.append(Page(type: .book(book), number: pageNumber))
-        for era in storage.eras {
+        for era in try storage.fetchEras() {
             pageNumber += 1
             pages.append(Page(type: .era(book, era), number: pageNumber))
             guard let poems = era.poems else { continue }

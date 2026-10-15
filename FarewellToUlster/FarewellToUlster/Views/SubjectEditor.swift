@@ -76,7 +76,7 @@ struct SubjectEditor: View {
     @Previewable @State var navigation = Navigation()
     @Previewable @Environment(Storage.self) var storage
     NavigationStack {
-        SubjectEditor(subject: storage.subjects.first!)
+        SubjectEditor(subject: try! storage.fetchSubjects().first!)
             .navigationDestination(for: Path.self) { path in
                 DestinationView(path: path)
             }

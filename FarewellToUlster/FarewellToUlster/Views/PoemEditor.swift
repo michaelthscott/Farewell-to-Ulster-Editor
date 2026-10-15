@@ -120,7 +120,7 @@ struct PoemEditor: View {
     @Previewable @State var navigation = Navigation()
     @Previewable @Environment(Storage.self) var storage
     NavigationStack {
-        PoemEditor(poem: storage.poems.first!)
+        PoemEditor(poem: try! storage.fetchPoems().first!)
             .navigationDestination(for: Path.self) { path in
                 DestinationView(path: path)
             }

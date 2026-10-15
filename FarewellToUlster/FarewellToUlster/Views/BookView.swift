@@ -13,8 +13,17 @@ struct BookView: View {
     @Environment(Storage.self) private var storage
 
     var body: some View {
+        switch Result(catching: { try pages }) {
+        case .success(let pages):
+            pager(pages)
+        case .failure(let error):
+            ContentUnavailableView("Could not load the book", systemImage: "exclamationmark.triangle", description: Text(error.localizedDescription))
+        }
+    }
+
+    private func pager(_ pages: [Page]) -> some View {
         @Bindable var navigation = navigation
-        TabView(selection: $navigation.pageSelection) {
+        return TabView(selection: $navigation.pageSelection) {
             ForEach(pages) { page in
                 switch page.type {
                 case .book(let book):
@@ -61,10 +70,12 @@ struct BookView: View {
     }
     
     var pages: [Page] {
-        guard let era = navigation.selectedEra else {
-            return Pages(storage: storage).pages
+        get throws {
+            guard let era = navigation.selectedEra else {
+                return try Pages(storage: storage).allPages()
+            }
+            return try Pages(storage: storage).pages(for: era)
         }
-        return Pages(storage: storage).pages(for: era)
     }
 }
 

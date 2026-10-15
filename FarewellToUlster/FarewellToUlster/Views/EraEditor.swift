@@ -55,7 +55,7 @@ struct EraEditor: View {
     @Previewable @State var navigation = Navigation()
     @Previewable @Environment(Storage.self) var storage
     NavigationStack {
-        EraEditor(era: storage.eras.first!)
+        EraEditor(era: try! storage.fetchEras().first!)
             .navigationDestination(for: Path.self) { path in
                 DestinationView(path: path)
             }

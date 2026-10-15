@@ -12,11 +12,14 @@ import UniformTypeIdentifiers
 struct JSONFile {
     let jsonBook: JSONBook
     
-    init?(storage: Storage) {
-        guard let book = storage.book else { return nil }
-        self.init(book: book, eras: storage.eras, events: storage.events, subjects: storage.subjects, poems: storage.poems)
+    /// Throws if anything can't be fetched, so a failed fetch can't produce a file with parts of the book missing.
+    init(storage: Storage) throws {
+        self.init(book: try storage.fetchBook(),
+                  eras: try storage.fetchEras(),
+                  events: try storage.fetchEvents(),
+                  subjects: try storage.fetchSubjects(),
+                  poems: try storage.fetchPoems())
     }
-    
 
     init(book: Book, eras: [Era], events: [Event], subjects: [Subject], poems: [Poem]) {
         let sortedEras = eras.map { era in

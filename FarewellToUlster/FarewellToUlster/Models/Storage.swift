@@ -9,11 +9,12 @@ import Foundation
 import SwiftData
 import UIKit
 
-/// An error that can be encountered while creating the storage. Each case keeps the underlying error, if any, so the failure can be diagnosed.
-enum StorageError: Error, CustomStringConvertible {
+/// An error that can be encountered while creating or reading the storage. Each case keeps the underlying error, if any, so the failure can be diagnosed.
+enum StorageError: LocalizedError, CustomStringConvertible {
     case noModelContainer(underlying: Error)
     case missingAsset(name: String)
     case invalidAsset(name: String, underlying: Error)
+    case noBook
 
     var description: String {
         switch self {
@@ -23,7 +24,14 @@ enum StorageError: Error, CustomStringConvertible {
             return "Could not find the asset \(name)"
         case .invalidAsset(let name, let underlying):
             return "Could not decode the asset \(name): \(underlying)"
+        case .noBook:
+            return "There is no book in the storage"
         }
+    }
+
+    /// Used by localizedDescription, so alerts that show it give the same message.
+    var errorDescription: String? {
+        description
     }
 }
 
@@ -115,34 +123,37 @@ enum StorageError: Error, CustomStringConvertible {
         try context.save()
     }
     
-    var subjects: [Subject] {
-        let descriptor = FetchDescriptor<Subject>()
-        guard let subjects = try? container.mainContext.fetch(descriptor) else { return [Subject]() }
-        return subjects.sorted()
+}
+
+// Fetches for code that runs once per action, such as export. Views use @Query instead.
+// These throw rather than returning an empty list, so a failed fetch can't be mistaken for an empty book.
+extension Storage {
+    func fetchBook() throws -> Book {
+        guard let book = try container.mainContext.fetch(FetchDescriptor<Book>()).first else {
+            throw StorageError.noBook
+        }
+        return book
     }
-    
-    var eras: [Era] {
-        let descriptor = FetchDescriptor<Era>()
-        guard let eras = try? container.mainContext.fetch(descriptor) else { return [Era]() }
-        return eras.sorted()
+
+    func fetchEras() throws -> [Era] {
+        try fetchSorted()
     }
-    
-    var events: [Event] {
-        let descriptor = FetchDescriptor<Event>()
-        guard let events = try? container.mainContext.fetch(descriptor) else { return [Event]() }
-        return events.sorted()
+
+    func fetchEvents() throws -> [Event] {
+        try fetchSorted()
     }
-    
-    var poems: [Poem] {
-        let descriptor = FetchDescriptor<Poem>()
-        guard let poems = try? container.mainContext.fetch(descriptor) else { return [Poem]() }
-        return poems.sorted()
+
+    func fetchSubjects() throws -> [Subject] {
+        try fetchSorted()
     }
-    
-    var book: Book? {
-        let descriptor = FetchDescriptor<Book>()
-        let books = try? container.mainContext.fetch(descriptor)
-        return books?.first
+
+    func fetchPoems() throws -> [Poem] {
+        try fetchSorted()
+    }
+
+    /// Fetch every model of a type, sorted by its Comparable conformance.
+    private func fetchSorted<Model: PersistentModel & Comparable>() throws -> [Model] {
+        try container.mainContext.fetch(FetchDescriptor<Model>()).sorted()
     }
 }
 

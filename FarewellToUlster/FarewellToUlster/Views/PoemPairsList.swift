@@ -36,7 +36,7 @@ struct PoemPairsList: View {
 #Preview(traits: .sampleData) {
     @Previewable @State var navigation = Navigation()
     @Previewable @Environment(Storage.self) var storage
-    let pairs = PoemSimilarity(threshold: 0.5).similarPoemPairs(poems: storage.poems.sorted())
+    let pairs = PoemSimilarity(threshold: 0.5).similarPoemPairs(poems: try! storage.fetchPoems())
     PoemPairsList(pairs: pairs)
 }
 #endif

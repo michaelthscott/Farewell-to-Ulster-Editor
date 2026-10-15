@@ -57,7 +57,7 @@ struct EditorDelete: ToolbarContent {
             Text("ABC")
         }
         .toolbar {
-            EditorDelete(item: storage.eras.first!, action: {
+            EditorDelete(item: try! storage.fetchEras().first!, action: {
                 print("hello")
             })
         }
