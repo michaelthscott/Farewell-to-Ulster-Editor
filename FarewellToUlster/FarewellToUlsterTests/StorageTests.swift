@@ -46,6 +46,33 @@ struct StorageTests {
         #expect(Storage.testStorage(with: "NoBook") == nil)
     }
 
+    @Test func testMissingAssetError() throws {
+        let bundle = try #require(Bundle(identifier: "org.michaelthscott.FarewellToUlsterTests"))
+        let error = try #require(throws: StorageError.self) {
+            _ = try Storage(isStoredInMemoryOnly: true, assetName: "DoesNotExist", bundle: bundle)
+        }
+        guard case .missingAsset(let name) = error else {
+            Issue.record("Expected missingAsset, got \(error)")
+            return
+        }
+        #expect(name == "DoesNotExist")
+    }
+
+    @Test func testInvalidAssetError() throws {
+        let bundle = try #require(Bundle(identifier: "org.michaelthscott.FarewellToUlsterTests"))
+        let error = try #require(throws: StorageError.self) {
+            _ = try Storage(isStoredInMemoryOnly: true, assetName: "NoBook", bundle: bundle)
+        }
+        guard case .invalidAsset(let name, let underlying) = error else {
+            Issue.record("Expected invalidAsset, got \(error)")
+            return
+        }
+        #expect(name == "NoBook")
+        // The decoding error is kept, so the message says why the asset could not be read.
+        #expect(underlying is DecodingError)
+        #expect(error.description.hasPrefix("Could not decode the asset NoBook: "))
+    }
+
     @Test func testSave() throws {
         let storage = try #require(Storage.testStorage(with: "SmallBook"))
         let poem = try #require(storage.poems.first)

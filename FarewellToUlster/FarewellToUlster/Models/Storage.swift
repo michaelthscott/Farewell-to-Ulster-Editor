@@ -9,9 +9,22 @@ import Foundation
 import SwiftData
 import UIKit
 
-enum StorageError: Error {
-    case invalidAsset
-    case noModelContainer
+/// An error that can be encountered while creating the storage. Each case keeps the underlying error, if any, so the failure can be diagnosed.
+enum StorageError: Error, CustomStringConvertible {
+    case noModelContainer(underlying: Error)
+    case missingAsset(name: String)
+    case invalidAsset(name: String, underlying: Error)
+
+    var description: String {
+        switch self {
+        case .noModelContainer(let underlying):
+            return "Could not create the model container: \(underlying)"
+        case .missingAsset(let name):
+            return "Could not find the asset \(name)"
+        case .invalidAsset(let name, let underlying):
+            return "Could not decode the asset \(name): \(underlying)"
+        }
+    }
 }
 
 /// SwiftData storage that is initialised from JSON data.
@@ -32,21 +45,23 @@ enum StorageError: Error {
         do {
             container = try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
-            throw StorageError.noModelContainer
+            throw StorageError.noModelContainer(underlying: error)
         }
-        do {
-            try loadData(assetName: assetName, bundle: bundle)
-        } catch {
-            throw StorageError.invalidAsset
-        }
+        // Errors are passed on as they are, so the message shows what actually went wrong.
+        try loadData(assetName: assetName, bundle: bundle)
     }
     
     func loadData(assetName: String, bundle: Bundle = Bundle.main) throws {
         let descriptor = FetchDescriptor<Book>()
         let booksCount = try container.mainContext.fetchCount(descriptor)
         guard booksCount == 0 else { return }
-        guard let asset = NSDataAsset(name: assetName, bundle: bundle) else { throw StorageError.invalidAsset }
-        let jsonBook = try JSONDecoder().decode(JSONBook.self, from: asset.data)
+        guard let asset = NSDataAsset(name: assetName, bundle: bundle) else { throw StorageError.missingAsset(name: assetName) }
+        let jsonBook: JSONBook
+        do {
+            jsonBook = try JSONDecoder().decode(JSONBook.self, from: asset.data)
+        } catch {
+            throw StorageError.invalidAsset(name: assetName, underlying: error)
+        }
         
         let book = jsonBook.book
         container.mainContext.insert(book)
