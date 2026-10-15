@@ -28,8 +28,8 @@ enum FileOrderedError: Error, CustomStringConvertible {
     }
 }
 
-// ErasTab, EventsTab, SubjectsTab and PoemsTab all call modelContext.insertOrdered(newEra)
 extension Storage {
+    /// Insert a new model with the next fileOrder after the existing ones, and save it.
     func insertOrdered<T: FileOrdered>(_ model: T) throws {
         let identifier = model.persistentModelID
         let existing: T? = container.mainContext.registeredModel(for: identifier)

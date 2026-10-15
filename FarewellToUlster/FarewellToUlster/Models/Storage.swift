@@ -157,7 +157,7 @@ extension Storage {
     }
 }
 
-// EditorDelete calls delete(item) in the delete button's action.
+// Changes go through Storage, so that a failed save can be reported by ContentView.
 extension Storage {
     func delete(_ model: any PersistentModel) {
         container.mainContext.delete(model)
