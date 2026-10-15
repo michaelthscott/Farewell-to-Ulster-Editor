@@ -10,11 +10,18 @@ Versions follow [Semantic Versioning](https://semver.org): MAJOR.MINOR.PATCH. Ea
 ### Changed
 
 - The app passes its SwiftData container to SwiftUI, so views can use `@Query`. The Eras, Events, Subjects and Poems tabs, the poem editor's pickers and the subject ordering sheet now do so. Their lists no longer fetch everything on each redraw, and they update as soon as an item is added or deleted.
+- On first launch, poems are linked to their era, events and subjects by looking each one up by UUID, in place of a database fetch per link.
+- "Failed to create storage" now says what went wrong, such as a missing asset or the JSON decoding error, in place of a generic "invalid asset".
+
+### Added
+
+- If the book's JSON links a poem to an era, event or subject that isn't in the book, first launch still loads the book without that link, and an alert now lists each link that was left out. Before, these links were dropped silently.
 
 ### Fixed
 
 - Edits are saved as soon as you tap Save in an editor, delete an item, or save a new subject order. Before, these changes were only written when SwiftData's autosave next ran. A failed save now shows a "Save failed" alert.
 - A new subject's sort position is saved along with the subject. Before, it was set after the save and left to autosave.
+- The book loaded on first launch is saved straight away. Before, it was only written when autosave next ran.
 
 ## [1.1.2]
 
