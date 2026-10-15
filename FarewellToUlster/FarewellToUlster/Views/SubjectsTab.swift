@@ -106,10 +106,10 @@ struct SubjectsTab: View {
     private func addSubject() {
         withAnimation {
             let index = subjects.count
-            let newSubject = Subject()
+            // Set before inserting, so insertOrdered's save includes it.
+            let newSubject = Subject(sortIndex: index)
             do {
                 try storage.insertOrdered(newSubject)
-                newSubject.sortIndex = index
                 navigation.subjectsPath.append(Path.subject(newSubject))
                 
             } catch let error as FileOrderedError {
