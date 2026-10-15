@@ -46,6 +46,13 @@ struct ContentView: View {
                 storage.saveError = nil
             }
         }
+        .alert("Some links in the book were not loaded", isPresented: hasLoadWarnings) {
+            Button("Ok", role: .cancel) {
+                storage.loadWarnings = []
+            }
+        } message: {
+            Text(loadWarningsMessage)
+        }
     }
 
     /// Presents the alert while Storage holds a save error, and clears the error when the alert is dismissed.
@@ -54,6 +61,25 @@ struct ContentView: View {
             get: { storage.saveError != nil },
             set: { if !$0 { storage.saveError = nil } }
         )
+    }
+
+    /// Presents the alert while Storage holds load warnings, and clears them when the alert is dismissed.
+    private var hasLoadWarnings: Binding<Bool> {
+        Binding(
+            get: { !storage.loadWarnings.isEmpty },
+            set: { if !$0 { storage.loadWarnings = [] } }
+        )
+    }
+
+    /// The first few warnings, one per line, so a long list doesn't overflow the alert.
+    private var loadWarningsMessage: String {
+        let shown = storage.loadWarnings.prefix(10)
+        let hidden = storage.loadWarnings.count - shown.count
+        var lines = Array(shown)
+        if hidden > 0 {
+            lines.append("and \(hidden) more")
+        }
+        return lines.joined(separator: "\n")
     }
 }
 

@@ -32,6 +32,9 @@ enum StorageError: Error, CustomStringConvertible {
     let container: ModelContainer
     /// The most recent error from save(). ContentView shows it in an alert and then clears it.
     var saveError: Error?
+    /// References in the JSON that didn't match any era, event or subject, and so were left out when the book was loaded.
+    /// ContentView shows them in an alert and then clears them.
+    var loadWarnings: [String] = []
     
     init(isStoredInMemoryOnly: Bool = false, assetName: String = "Farewell-to-Ulster", bundle: Bundle = Bundle.main) throws {
         let schema = Schema([
@@ -63,62 +66,53 @@ enum StorageError: Error, CustomStringConvertible {
             throw StorageError.invalidAsset(name: assetName, underlying: error)
         }
         
-        let book = jsonBook.book
-        container.mainContext.insert(book)
-        
-        for jsonEra in jsonBook.eras {
-            let era = jsonEra.era
-            container.mainContext.insert(era)
+        let context = container.mainContext
+        context.insert(jsonBook.book)
+
+        let eras = jsonBook.eras.map(\.era)
+        let events = jsonBook.events.map(\.event)
+        let subjects = jsonBook.subjects.map(\.subject)
+        for era in eras { context.insert(era) }
+        for event in events { context.insert(event) }
+        for subject in subjects { context.insert(subject) }
+
+        // Look the models up by UUID, rather than fetching once per reference. If a UUID appears twice, the first model wins.
+        let erasByUUID = Dictionary(eras.map { ($0.uuid, $0) }, uniquingKeysWith: { first, _ in first })
+        let eventsByUUID = Dictionary(events.map { ($0.uuid, $0) }, uniquingKeysWith: { first, _ in first })
+        let subjectsByUUID = Dictionary(subjects.map { ($0.uuid, $0) }, uniquingKeysWith: { first, _ in first })
+
+        // A reference that doesn't match any model is left out of the poem, and reported in loadWarnings.
+        var warnings: [String] = []
+        func linked<Model>(_ uuids: [UUID], from models: [UUID: Model], kind: String, poem: String) -> [Model] {
+            var linked: [Model] = []
+            var seen = Set<UUID>()
+            for uuid in uuids where seen.insert(uuid).inserted {
+                if let model = models[uuid] {
+                    linked.append(model)
+                } else {
+                    warnings.append("\(poem): \(kind) \(uuid.uuidString) not found")
+                }
+            }
+            return linked
         }
-        
-        for jsonEvent in jsonBook.events {
-            let event = jsonEvent.event
-            container.mainContext.insert(event)
-        }
-        
-        for jsonSubject in jsonBook.subjects {
-            let subject = jsonSubject.subject
-            container.mainContext.insert(subject)
-        }
-        
+
         for jsonPoem in jsonBook.poems {
             let poem = jsonPoem.poem
             if let eraUUID = jsonPoem.eraUUID {
-                let fetchDescriptor = FetchDescriptor<Era>(predicate: #Predicate{ era in
-                    era.uuid == eraUUID
-                })
-                poem.era = try? container.mainContext.fetch(fetchDescriptor).first
+                poem.era = linked([eraUUID], from: erasByUUID, kind: "era", poem: poem.title).first
             }
             if let eventUUIDs = jsonPoem.eventUUIDs, !eventUUIDs.isEmpty {
-                var events: [Event] = []
-                for eventUUID in eventUUIDs {
-                    let fetchDescriptor = FetchDescriptor<Event>(predicate: #Predicate{ event in
-                        event.uuid == eventUUID
-                    })
-                    if let event = try? container.mainContext.fetch(fetchDescriptor).first {
-                        if !events.contains(event) {
-                            events.append(event)
-                        }
-                    }
-                }
-                poem.events = events
+                poem.events = linked(eventUUIDs, from: eventsByUUID, kind: "event", poem: poem.title)
             }
             if let subjectUUIDs = jsonPoem.subjectUUIDs, !subjectUUIDs.isEmpty {
-                var subjects: [Subject] = []
-                for subjectUUID in subjectUUIDs {
-                    let fetchDescriptor = FetchDescriptor<Subject>(predicate: #Predicate{ subject in
-                        subject.uuid == subjectUUID
-                    })
-                    if let subject = try? container.mainContext.fetch(fetchDescriptor).first {
-                        if !subjects.contains(subject) {
-                            subjects.append(subject)
-                        }
-                    }
-                }
-                poem.subjects = subjects
+                poem.subjects = linked(subjectUUIDs, from: subjectsByUUID, kind: "subject", poem: poem.title)
             }
-            container.mainContext.insert(poem)
+            context.insert(poem)
         }
+        loadWarnings = warnings
+
+        // Save the loaded book now, rather than leaving it to autosave.
+        try context.save()
     }
     
     var subjects: [Subject] {
