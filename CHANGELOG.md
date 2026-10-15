@@ -22,6 +22,8 @@ Versions follow [Semantic Versioning](https://semver.org): MAJOR.MINOR.PATCH. Ea
 - Edits are saved as soon as you tap Save in an editor, delete an item, or save a new subject order. Before, these changes were only written when SwiftData's autosave next ran. A failed save now shows a "Save failed" alert.
 - A new subject's sort position is saved along with the subject. Before, it was set after the save and left to autosave.
 - The book loaded on first launch is saved straight away. Before, it was only written when autosave next ran.
+- Commit update stops and reports an error if the book, eras, events, subjects or poems can't be fetched. Before, a failed fetch was treated as an empty list, so the update could commit a book with parts missing to the site repo.
+- PDF export shows a "PDF export failed" alert if the book can't be fetched, in place of doing nothing, and the Book tab shows the error in place of a blank page.
 
 ## [1.1.2]
 
