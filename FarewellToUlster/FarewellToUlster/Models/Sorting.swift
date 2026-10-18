@@ -47,13 +47,10 @@ extension Storage {
     // TODO:  Called from EditorDelete's post-delete action in SubjectEditor after deleting the subject. Should deleting one of more subjects automatically run this? The problem is that we want EditorDelete to work for all models, but then also handle the special case for subjects. Thus the post-delete action.
     
     /// Re-index the subjects so that their sortIndex property correctly indicates their position in the sorted array of subjects.
-    /// Fetch and save errors are passed on as they are, so the message shows what actually went wrong.
+    /// The changes are left for the caller to save. A fetch error is passed on as it is, so the message shows what actually went wrong.
     func reindexSubjects() throws {
         let fetchDescriptor = FetchDescriptor<Subject>()
         var items = try container.mainContext.fetch(fetchDescriptor).indexSorted()
         items.resetSortIndexes()
-        if container.mainContext.hasChanges {
-            try container.mainContext.save()
-        }
     }
 }

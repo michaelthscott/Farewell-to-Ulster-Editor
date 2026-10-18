@@ -64,7 +64,7 @@ struct SortingTests {
         storage.delete(storage.subjects[1])
         #expect(storage.subjects.count == 2)
         #expect(storage.subjects.indexSorted().map { "\($0.title):\($0.sortIndex)"} == ["Thinking:0", "Pussycat:2"])
-        try? storage.reindexSubjects()
+        try storage.reindexSubjects()
         #expect(storage.subjects.indexSorted().map { "\($0.title):\($0.sortIndex)"} == ["Thinking:0", "Pussycat:1"])
     }
 }

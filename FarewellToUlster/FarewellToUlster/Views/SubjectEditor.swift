@@ -52,10 +52,12 @@ struct SubjectEditor: View {
                 subject.category = selectedCategory
             }
             EditorDelete(item: subject) {
+                // EditorDelete saves after this, so the new indexes are written along with the deletion.
+                // A failure is kept in saveError, so ContentView reports it after the editor is dismissed.
                 do {
                     try storage.reindexSubjects()
                 } catch {
-                    print(error.localizedDescription)
+                    storage.saveError = error
                 }
             }
         }
