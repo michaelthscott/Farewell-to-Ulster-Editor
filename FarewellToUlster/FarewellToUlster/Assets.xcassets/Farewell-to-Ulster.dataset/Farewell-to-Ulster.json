@@ -779,7 +779,7 @@
       "category" : "narrative",
       "eraUUID" : "1E69A6D4-702B-4384-B7A3-0AE08E370F08",
       "fileOrder" : "0013",
-      "status" : "getting started",
+      "status" : "in progress",
       "subjectUUIDs" : [
         "3ADE30B6-AB2C-418E-B713-A001C2D36EEC"
       ],
@@ -1208,11 +1208,11 @@
       "category" : "narrative",
       "eraUUID" : "ACDAF876-52F9-424C-867F-C24C0CA674D2",
       "fileOrder" : "0046",
-      "status" : "getting started",
+      "status" : "in progress",
       "subjectUUIDs" : [
         "876C0503-2522-4DE9-97AB-A98F9660FA0D"
       ],
-      "text" : "Strongbow drinkers blow\nwoo! the concrete ledge\n\nlabel peeled\ncap unscrewed\nbrown glass bottle held\n\nStrongbow drinkers blow\nlet's go crazy escapades",
+      "text" : "Strongbow drinkers blow\nwooo the concrete ledge\n\nlabel peeled\ncap unscrewed\nbrown glass bottle held\n\nStrongbow drinkers blow\ncrazy let's go escapades",
       "title" : "Jordanstown seawall",
       "uuid" : "DD16B038-530F-44BC-8919-99DBA71E05CE"
     },
@@ -1274,11 +1274,11 @@
       "category" : "narrative",
       "eraUUID" : "E0980C38-7FCE-45AF-93FF-E46A1358CD14",
       "fileOrder" : "0051",
-      "status" : "getting started",
+      "status" : "in progress",
       "subjectUUIDs" : [
         "66C661EB-14B7-404A-BBDD-AA96573A6B19"
       ],
-      "text" : "lined up\nsquatting\nbacks along the wall\nnudge nod and wink\n\nrecorder stuck\nbetween knees\nwaggling\n\ndidn't see it as funny\nuntil explained\n\nbunch of sniggering gits",
+      "text" : "lined up\nsquatting\nbacks along the wall\nnudge nod and wink\n\nwaggling\nrecorder stuck\nbetween knees\n\ndidn't see it as funny\nuntil explained\n\nbunch of sniggering gits",
       "title" : "Innuendo",
       "uuid" : "81A1D389-4297-4333-8CF9-206A21126813"
     },
@@ -1473,7 +1473,7 @@
       "category" : "narrative",
       "eraUUID" : "1E69A6D4-702B-4384-B7A3-0AE08E370F08",
       "fileOrder" : "0066",
-      "status" : "getting started",
+      "status" : "in progress",
       "subjectUUIDs" : [
         "66C661EB-14B7-404A-BBDD-AA96573A6B19"
       ],
@@ -1744,11 +1744,11 @@
       "category" : "descriptive",
       "eraUUID" : "EBE25509-202F-49AF-B654-A7746CCC01A2",
       "fileOrder" : "0086",
-      "status" : "getting started",
+      "status" : "in progress",
       "subjectUUIDs" : [
         "8ED11B87-901F-44F0-ADC3-F4DE88EFBA87"
       ],
-      "text" : "sandy specked jelly\npoked with a stick\nalready dead\n\narmless menace\nsting coloured pink\ndrift in waist high waves",
+      "text" : "sandy specked jelly\npoked with a stick\nalready dead\n\narmless menace\nsting coloured pink\ndrifts in waist high waves",
       "title" : "Jellyfish",
       "uuid" : "A229B6DD-93C8-4199-9D25-BC9F540F90CA"
     },
@@ -2966,7 +2966,7 @@
       "category" : "descriptive",
       "eraUUID" : "F487E1AC-48D1-4F82-9954-1DDF108B988A",
       "fileOrder" : "0178",
-      "status" : "getting started",
+      "status" : "in progress",
       "subjectUUIDs" : [
         "D3D54B58-91C1-45D4-AE27-8963F3032291"
       ],
@@ -3413,14 +3413,14 @@
       "eraUUID" : "ACDAF876-52F9-424C-867F-C24C0CA674D2",
       "fileOrder" : "0212",
       "scratchpad" : "Lady Esquire shoe conditioner",
-      "status" : "getting started",
+      "status" : "in progress",
       "subjectUUIDs" : [
         "3ADE30B6-AB2C-418E-B713-A001C2D36EEC",
         "6DAEFA40-3546-4CB9-BC1F-D7C1F93333C5",
         "D3D54B58-91C1-45D4-AE27-8963F3032291",
         "EDF42329-B389-40CA-B5BC-E4CEBDA2A1EC"
       ],
-      "text" : "walk up between the protacabins\nsun throws my shadow ahead\n\nhair almost down \nto my shoulders\n\ndamn kink\nright side\nover my ear\n\nold brown pullover\nthat shrank\na little\n\nslightly flared\nbottle green\nneedlecord\n\nscuffed laceups\nthat come up\npast the ankle\n\nthat kink\nI just can't\nget rid of it\n\nstill stoned from last night",
+      "text" : "walk up between protacabins\nsun throws my shadow ahead\n\nhair almost down \nto my shoulders\n\ndamn kink\nright side\nover my ear\n\nold brown pullover\nthat shrank\na little\n\nneedlecord\nbottle green\nslightly flared\n\nscuffed laceups\nthat come up\npast the ankle\n\nthat kink\nI just can't\nget rid of it\n\nstill stoned from last night",
       "title" : "Kink",
       "uuid" : "FCBAB435-9715-478E-A16D-2DC3AAF04876"
     },
@@ -3801,11 +3801,11 @@
       "category" : "descriptive",
       "eraUUID" : "EBE25509-202F-49AF-B654-A7746CCC01A2",
       "fileOrder" : "0242",
-      "status" : "getting started",
+      "status" : "in progress",
       "subjectUUIDs" : [
         "3D152F18-8220-4347-BFC6-1D95C6BB59E7"
       ],
-      "text" : "take the butter\nfrom the fridge\nput the last bit on the dish\n\nfold the buttery wrapper\nKerrygold\n\nput it in the cold cupboard\nin another dish\n\nbaking cakes\nangelica\nlicking the bowl",
+      "text" : "take the butter\nfrom the fridge\nlast bit on the dish\n\nfolded buttery wrapper\nin the cold cupboard\non another dish\n\nbaking cakes\nI love angelica\nlicking the bowl",
       "title" : "Kerrygold",
       "uuid" : "7797AE80-3313-4BA3-A09A-2CBBC5A1DC76"
     },
@@ -3979,13 +3979,13 @@
       ],
       "fileOrder" : "0255",
       "scratchpad" : "learning to wank in London\n\nonce close friends",
-      "status" : "getting started",
+      "status" : "in progress",
       "subjectUUIDs" : [
         "16DCAB0F-749D-4169-A3AE-7E61463927A3",
         "66C661EB-14B7-404A-BBDD-AA96573A6B19",
         "F530FAE0-F126-447E-9C12-17C4CA78FD69"
       ],
-      "text" : "the bathroom was up in the roof\nhe wanted to show me something\nand locked the door\n\ntook his cock out?\ndropped his pants?\n\nmaybe he was wearing shorts like his father\nyes\n\nwanking did i know about wanking?\nhe would show me\nat that age you don't have to get it hard\nso he started wanking\nyou do it like this\n\ni seem to remember sitting on the toilet seat\nor on the edge of the bath\n\nwe were boys and still friends\nthough he had grown up since i last saw him in Belfast\n\nnew London school ways\ni was passive and watching\nwith no idea what would happen\n\nand then he said come to the bedroom\nand we went he pushed a chair against the door\nwe stripped? and got into bed\n\nthen it made sense\nsmooth skin\nhis hard cock against my stomach\nor between my legs and i could touch him\n\na bubble of pleasure\nsuddenly burst as the French boy\non language exchange\npushed the door open\nwhat are you doing?\n\nnothing\nguilty quickly dressed\nwhen i got home i passed on the knowledge",
+      "text" : "the bathroom was up in the roof\nwanted to show me something\nand locked the door\n\nwearing shorts like his father\ntook his thing up and out\n\ndid I know how to\nyou do it like this\nstanding beside me\nI'm sitting on the toilet seat\n\nboys and still friends but grown \nup since I last saw him \nin Belfast\n\nwatching\nno idea what would happen\nthen he said come to the bedroom\n\npushed a chair against the door\nwe got into bed\n\nskin made sense\nagainst stomach\nabout to touch\n\nbubble burst \n\nthat bloody French boy\non language exchange\npushes the door open\nwhat are you doing\n\nnothing\n\nwhen home\npass on the knowledge",
       "title" : "Lesson",
       "uuid" : "E8A0F4AF-0C16-4A16-99C9-3DB1B5F83CFC"
     },
@@ -4023,11 +4023,11 @@
       "eraUUID" : "F487E1AC-48D1-4F82-9954-1DDF108B988A",
       "fileOrder" : "0258",
       "scratchpad" : "it's hard to say what's wrong with her\nbut her speech and walk's not right\nstumbling clumsy\nblurred and mumbly\nsimple not so bright\n\nbut how she wants to be a girl\nand shine\n\nerratic hairbrush hand\n\ndreams and reality do not fit\n\nnothing spelled in all the facts fully said\ndon't talk about it\nwe don't talk about it\n\nborderline case\n\nFleming Fulton School\n\nthe handicapped",
-      "status" : "getting started",
+      "status" : "in progress",
       "subjectUUIDs" : [
         "76BE9F38-5635-4460-98A4-52FCCCA4C28F"
       ],
-      "text" : "Julie's jumping\non my tummy\nand i'm getting hard\n\ni'm bad\nbad thoughts\n\nyes I can be bad\nglee free me she bad",
+      "text" : "Julie jumping\non my tummy\ndon't get hard\n\nme thinking \nbad thoughts\nyes I can be bad\n\nglee free me she \nbetter stop now ",
       "title" : "Julie",
       "uuid" : "E8F2FC9E-B8A1-4CB5-B8A1-3125541AC3F2"
     },
@@ -4338,7 +4338,7 @@
       "category" : "lament",
       "eraUUID" : "1E69A6D4-702B-4384-B7A3-0AE08E370F08",
       "fileOrder" : "0282",
-      "status" : "getting started",
+      "status" : "in progress",
       "subjectUUIDs" : [
         "805C994F-34A7-4351-BD62-97454B8B00A9",
         "C37628AB-D572-4377-97C5-919D4D584C96"
@@ -4621,7 +4621,7 @@
       "category" : "descriptive",
       "eraUUID" : "F487E1AC-48D1-4F82-9954-1DDF108B988A",
       "fileOrder" : "0304",
-      "status" : "getting started",
+      "status" : "in progress",
       "subjectUUIDs" : [
         "C084DF66-00B8-475E-BBC3-1B14329CDD3E"
       ],
@@ -4801,13 +4801,13 @@
       "category" : "complaint",
       "eraUUID" : "BF57A2D9-B181-417B-81F9-55020069D93E",
       "fileOrder" : "0318",
-      "status" : "getting started",
+      "status" : "in progress",
       "subjectUUIDs" : [
         "1EF2089F-194A-44F3-AA13-E0F02768BEDE",
         "BCFF7E65-2944-4526-B82A-851A9C95D343",
         "F8C2CB36-6367-4BBF-A1FB-9409E4D3901B"
       ],
-      "text" : "down to the Crossroads\nkeep on the right\n\nup from the Crossroads\nkeep to the left\n\nexception proves the rule\n\ndon't face the oncoming traffic\ncars come round that corner too fast\n\ndeep brown gash in a wall of grass\n\nhear a car coming behind you\nstand and turn",
+      "text" : "down to the Crossroads\nkeep on the right\n\nup from the Crossroads\nkeep to the left\n\nexception proves the rule\n\nbest not to face the oncoming traffic\ncars come round that corner too fast\n\ndeep brown gash in the wall of grass\n\nhear a car coming behind you\nstand and turn",
       "title" : "Killer cars",
       "uuid" : "59B243BF-F626-4149-A648-64455C3F22B9"
     },
@@ -4854,7 +4854,7 @@
       "category" : "descriptive",
       "eraUUID" : "EBE25509-202F-49AF-B654-A7746CCC01A2",
       "fileOrder" : "0322",
-      "status" : "getting started",
+      "status" : "in progress",
       "subjectUUIDs" : [
         "60699AC7-AABC-4019-BD84-F2E0CB6B6B20"
       ],
@@ -6976,7 +6976,7 @@
       "category" : "narrative",
       "eraUUID" : "1E69A6D4-702B-4384-B7A3-0AE08E370F08",
       "fileOrder" : "0490",
-      "status" : "getting started",
+      "status" : "in progress",
       "subjectUUIDs" : [
         "01D182F4-777F-455D-833C-7993AC66EC42",
         "C1031204-4082-4E21-81EB-699EE5F5818C"
@@ -7742,7 +7742,7 @@
       "category" : "narrative",
       "eraUUID" : "E86C3877-3815-42AE-BEBF-3787BDB69C56",
       "fileOrder" : "0551",
-      "status" : "getting started",
+      "status" : "in progress",
       "subjectUUIDs" : [
         "281DAE71-EDFB-43F5-981C-39C6B8C20B39"
       ],
@@ -7793,7 +7793,7 @@
       "category" : "descriptive",
       "eraUUID" : "F487E1AC-48D1-4F82-9954-1DDF108B988A",
       "fileOrder" : "0555",
-      "status" : "getting started",
+      "status" : "in progress",
       "subjectUUIDs" : [
         "01D182F4-777F-455D-833C-7993AC66EC42",
         "D99D600E-BC3A-4F79-9EBE-72B91600E03D"
@@ -7909,7 +7909,7 @@
       "category" : "descriptive",
       "eraUUID" : "1E69A6D4-702B-4384-B7A3-0AE08E370F08",
       "fileOrder" : "0564",
-      "status" : "getting started",
+      "status" : "in progress",
       "subjectUUIDs" : [
         "281DAE71-EDFB-43F5-981C-39C6B8C20B39",
         "DA8BE78B-F31E-4007-94B2-1805B17238F5"
@@ -7962,11 +7962,11 @@
       "category" : "narrative",
       "eraUUID" : "1C745966-0505-45CF-AA28-EA09E3144F12",
       "fileOrder" : "0569",
-      "status" : "getting started",
+      "status" : "in progress",
       "subjectUUIDs" : [
         "6DAEFA40-3546-4CB9-BC1F-D7C1F93333C5"
       ],
-      "text" : "dropping out\ngoing to Leeds\n\nbeside the Ripper's hotel\nRomanowich with his Lee\nme and Speedy room each\n\ngive Speedy's brother my bike\n\nRimbaud Sims turns up \ntale of escape Istanbul\n\nstays with some girl he knows\n\nreunited trio\ndidn't last long\nsoon fell apart\n\ntalk is not glue",
+      "text" : "drop out\ngo to Leeds\n\nbeside the Ripper hotel\nRomanowich with his Lee\nSpeedy and me room each\n\nSpeedy's brother gets my bike\n\nRimbaud Sims appears  \nIstanbul tale of escape\n\nstays with some girl he knows\n\nthe reunited trio\ndidn't last long\nsoon fell apart\n\ntalk is not glue",
       "title" : "Leeds",
       "uuid" : "0A4BA02F-2D37-4C04-B3EE-675C8A1C88DB"
     },
@@ -8153,11 +8153,11 @@
         "BD40CD6E-C446-4704-85B9-04966E3D2F9F"
       ],
       "fileOrder" : "0584",
-      "status" : "getting started",
+      "status" : "in progress",
       "subjectUUIDs" : [
         "2E667939-4314-420D-89FF-4FC512542ACB"
       ],
-      "text" : "listening to Sergeant Pepper \nLP cover in my hands\nBull's living room\nsitting forward\n\nit's a concept \nmade up idea\n\nwhy did they have to come up with that",
+      "text" : "listening to Sergeant Pepper \nLP cover in my hands\nBull's living room\nsitting forward\n\nit's a concept \nmade up idea\n\nwhy did they have \nto come up with that",
       "title" : "Just released",
       "uuid" : "A854C02A-3818-4B0C-871A-AE643E20A493"
     },
@@ -8755,7 +8755,7 @@
       "category" : "ironic",
       "eraUUID" : "BF57A2D9-B181-417B-81F9-55020069D93E",
       "fileOrder" : "0631",
-      "status" : "getting started",
+      "status" : "in progress",
       "subjectUUIDs" : [
         "13613B9B-E678-491E-95E3-761B9585EF44"
       ],
@@ -8839,7 +8839,7 @@
       "category" : "descriptive",
       "eraUUID" : "E0980C38-7FCE-45AF-93FF-E46A1358CD14",
       "fileOrder" : "0638",
-      "status" : "getting started",
+      "status" : "in progress",
       "subjectUUIDs" : [
         "9700C0B7-41A4-4873-B7E7-AAB10E0ECB1C"
       ],
@@ -9179,7 +9179,7 @@
       "category" : "narrative",
       "eraUUID" : "ACDAF876-52F9-424C-867F-C24C0CA674D2",
       "fileOrder" : "0666",
-      "status" : "getting started",
+      "status" : "in progress",
       "subjectUUIDs" : [
         "0A8379D5-F722-439D-A0FF-B9373C070FAD",
         "E28B3420-8274-473A-AF36-4F47E3E78D2B"
@@ -10191,7 +10191,7 @@
       "category" : "descriptive",
       "eraUUID" : "F487E1AC-48D1-4F82-9954-1DDF108B988A",
       "fileOrder" : "0750",
-      "status" : "getting started",
+      "status" : "in progress",
       "subjectUUIDs" : [
         "C37628AB-D572-4377-97C5-919D4D584C96"
       ],
@@ -10314,7 +10314,7 @@
       "category" : "complaint",
       "eraUUID" : "EBE25509-202F-49AF-B654-A7746CCC01A2",
       "fileOrder" : "0760",
-      "status" : "getting started",
+      "status" : "in progress",
       "subjectUUIDs" : [
         "CDD2D804-8965-4ECE-BDAC-95B7FC0FC0B1"
       ],
@@ -10531,11 +10531,11 @@
       "category" : "descriptive",
       "eraUUID" : "E0980C38-7FCE-45AF-93FF-E46A1358CD14",
       "fileOrder" : "0778",
-      "status" : "getting started",
+      "status" : "in progress",
       "subjectUUIDs" : [
         "38748FDE-EDBA-4F62-851C-FCA560C08CB1"
       ],
-      "text" : "ask what’s the time\nlook at my empty wrist\nit's two hairs past a freckle\n",
+      "text" : "asked what’s the time\nlook at my empty wrist\ntwo hairs past a freckle\n",
       "title" : "Joke",
       "uuid" : "674833AB-2DB3-449F-9B34-ECBCB1F7202D"
     },
@@ -10715,7 +10715,7 @@
       "category" : "descriptive",
       "eraUUID" : "BF57A2D9-B181-417B-81F9-55020069D93E",
       "fileOrder" : "0795",
-      "status" : "getting started",
+      "status" : "in progress",
       "subjectUUIDs" : [
         "D17D11E5-8A88-4EAC-BB93-2CEA027C849A"
       ],
@@ -10971,7 +10971,7 @@
       "category" : "narrative",
       "eraUUID" : "F487E1AC-48D1-4F82-9954-1DDF108B988A",
       "fileOrder" : "0816",
-      "status" : "getting started",
+      "status" : "in progress",
       "subjectUUIDs" : [
         "1BA4097C-8DAE-4180-AD39-96EF1C1091D1",
         "670056E8-F6C4-4247-8D7B-C11382D0F657"
@@ -11265,11 +11265,11 @@
       "category" : "lament",
       "eraUUID" : "E0980C38-7FCE-45AF-93FF-E46A1358CD14",
       "fileOrder" : "0840",
-      "status" : "getting started",
+      "status" : "in progress",
       "subjectUUIDs" : [
         "F317C79E-8975-4B3A-A842-CA670BCE5DBF"
       ],
-      "text" : "my spinning rope\nlittle metal swivel\nspin the loop\njump in it\nnever",
+      "text" : "my while spinning rope\nlittle metal swivel\nspin the loop\njump in it\nnever",
       "title" : "Lasso",
       "uuid" : "EA3D95AF-7983-4DE4-A5A4-0FE8450E8922"
     },
@@ -11302,7 +11302,7 @@
       "category" : "descriptive",
       "eraUUID" : "1E69A6D4-702B-4384-B7A3-0AE08E370F08",
       "fileOrder" : "0843",
-      "status" : "getting started",
+      "status" : "in progress",
       "subjectUUIDs" : [
         "EDF42329-B389-40CA-B5BC-E4CEBDA2A1EC"
       ],
@@ -11386,7 +11386,7 @@
       "category" : "descriptive",
       "eraUUID" : "03C1D8E2-5CAD-4A17-AC7C-F7362CC4560C",
       "fileOrder" : "0850",
-      "status" : "getting started",
+      "status" : "in progress",
       "subjectUUIDs" : [
         "56A2CE97-A6A1-45AF-A85F-7A2D46504AB9",
         "BCFF7E65-2944-4526-B82A-851A9C95D343"
@@ -11488,7 +11488,7 @@
       "category" : "narrative",
       "eraUUID" : "7F184646-54B0-4D5A-ACC1-7150517DCFD0",
       "fileOrder" : "0858",
-      "status" : "getting started",
+      "status" : "in progress",
       "subjectUUIDs" : [
         "01D182F4-777F-455D-833C-7993AC66EC42"
       ],
@@ -11712,7 +11712,7 @@
       "category" : "descriptive",
       "eraUUID" : "1E69A6D4-702B-4384-B7A3-0AE08E370F08",
       "fileOrder" : "0877",
-      "status" : "getting started",
+      "status" : "in progress",
       "subjectUUIDs" : [
         "EDF42329-B389-40CA-B5BC-E4CEBDA2A1EC"
       ],
