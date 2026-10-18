@@ -102,7 +102,15 @@ struct PoemsTab: View {
     }
     
     private func tokenSection(_ title: String, tokens: [PoemSearchToken]) -> some View {
-        Section(title) {
+        Section {
+            // The title is a row rather than a section header, because headers stay
+            // pinned at the top after their rows have scrolled away.
+            // Without a search completion the row can't be tapped.
+            Text(title)
+                .font(.headline)
+                .foregroundStyle(Color.primary)
+                .padding(.top)
+                .listRowSeparator(.hidden)
             ForEach(tokens) { token in
                 Text(token.rawValue)
                     .searchCompletion(token)
