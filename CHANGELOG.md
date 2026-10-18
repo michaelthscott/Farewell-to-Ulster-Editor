@@ -7,6 +7,8 @@ Versions follow [Semantic Versioning](https://semver.org): MAJOR.MINOR.PATCH. Ea
 
 ## [Unreleased]
 
+## [1.4.0]
+
 ### Changed
 
 - The Poems tab's search suggestions are grouped under "Status", "Category" and "Other" titles, in place of one list told apart by colour. The titles are bold, scroll away with their suggestions and can't be tapped. Suggestions are shown while the search field is empty and no token has been chosen.
