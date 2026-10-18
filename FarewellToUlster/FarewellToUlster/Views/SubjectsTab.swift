@@ -53,6 +53,11 @@ struct SubjectsTab: View {
                         }
                     }
                 }
+                .overlay {
+                    if !searchText.isEmpty && selectedSubjects.isEmpty {
+                        ContentUnavailableView.search(text: searchText)
+                    }
+                }
                 .navigationDestination(for: Path.self) { path in
                     DestinationView(path: path)
                 }
