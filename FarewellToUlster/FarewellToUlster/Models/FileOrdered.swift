@@ -53,4 +53,18 @@ extension Storage {
             try container.mainContext.save()
         }
     }
+
+    /// Insert a new model, as the tabs' add buttons do. Returns whether it was added.
+    /// On failure the model is discarded, and the error is kept in addError so ContentView can report it.
+    func add<T: FileOrdered>(_ model: T) -> Bool {
+        do {
+            try insertOrdered(model)
+            return true
+        } catch {
+            // If the model is new and in an unsaved state, the context simply discards it.
+            delete(model)
+            addError = error
+            return false
+        }
+    }
 }

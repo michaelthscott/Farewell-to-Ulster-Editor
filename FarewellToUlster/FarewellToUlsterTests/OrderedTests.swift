@@ -66,6 +66,24 @@ class OrderedTests {
         #expect(try storage.container.mainContext.fetchCount(fetchDescriptor) == 6)
     }
 
+    @Test func testAdd() async throws {
+        let storage = try #require(Storage.testStorage(with: "SmallBook"))
+        let newPoem = Poem()
+        #expect(storage.add(newPoem))
+        #expect(storage.addError == nil)
+        #expect(newPoem.fileOrder == "0007")
+        #expect(try storage.container.mainContext.fetchCount(fetchDescriptor) == 7)
+    }
+
+    @Test func testAddFailed() async throws {
+        let storage = try #require(Storage.testStorage(with: "SmallBook"))
+        let poems = try storage.container.mainContext.fetch(fetchDescriptor)
+        poems[0].fileOrder = "abc"
+        #expect(!storage.add(Poem()))
+        #expect(storage.addError as? FileOrderedError == .parseFailed(fileOrder: "abc"))
+        #expect(try storage.container.mainContext.fetchCount(fetchDescriptor) == 6)
+    }
+
     @Test func testInsertOrderedFirstInsert() async throws {
         let storage = try #require(Storage.testStorage(with: "SmallBook"))
         let poems = try storage.container.mainContext.fetch(fetchDescriptor)

@@ -13,8 +13,6 @@ struct EventsTab: View {
     @Environment(Navigation.self) private var navigation
     @Environment(Storage.self) private var storage
     @Query private var events: [Event]
-    @State private var addFailed: Bool = false
-    @State private var addError: String = ""
     @State private var searchText = ""
 
     var body: some View {
@@ -55,12 +53,6 @@ struct EventsTab: View {
                     Button(action: addEvent) {
                         Label("Add event", systemImage: "plus")
                     }
-                    .alert("Add failed: \(addError)", isPresented: $addFailed) {
-                        Button("Ok", role: .cancel) {
-                            addFailed = false
-                            addError = ""
-                        }
-                    }
                 }
             }
         }
@@ -86,14 +78,8 @@ struct EventsTab: View {
     private func addEvent() {
         withAnimation {
             let newEvent = Event()
-            do {
-                try storage.insertOrdered(newEvent)
+            if storage.add(newEvent) {
                 navigation.eventsPath.append(Path.event(newEvent))
-            } catch {
-                // If the model is new and in an unsaved state, the context simply discards it.
-                storage.delete(newEvent)
-                addFailed = true
-                addError = error.localizedDescription
             }
         }
     }

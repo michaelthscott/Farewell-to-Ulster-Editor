@@ -46,6 +46,11 @@ struct ContentView: View {
                 storage.saveError = nil
             }
         }
+        .alert("Add failed: \(storage.addError?.localizedDescription ?? "")", isPresented: addFailed) {
+            Button("Ok", role: .cancel) {
+                storage.addError = nil
+            }
+        }
         .alert("Some links in the book were not loaded", isPresented: hasLoadWarnings) {
             Button("Ok", role: .cancel) {
                 storage.loadWarnings = []
@@ -60,6 +65,14 @@ struct ContentView: View {
         Binding(
             get: { storage.saveError != nil },
             set: { if !$0 { storage.saveError = nil } }
+        )
+    }
+
+    /// Presents the alert while Storage holds an add error, and clears the error when the alert is dismissed.
+    private var addFailed: Binding<Bool> {
+        Binding(
+            get: { storage.addError != nil },
+            set: { if !$0 { storage.addError = nil } }
         )
     }
 

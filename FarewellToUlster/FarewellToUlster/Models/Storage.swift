@@ -40,6 +40,8 @@ enum StorageError: LocalizedError, CustomStringConvertible {
     let container: ModelContainer
     /// The most recent error from save(). ContentView shows it in an alert and then clears it.
     var saveError: (any Error)?
+    /// The most recent error from add(_:). ContentView shows it in an alert and then clears it.
+    var addError: (any Error)?
     /// References in the JSON that didn't match any era, event or subject, and so were left out when the book was loaded.
     /// ContentView shows them in an alert and then clears them.
     var loadWarnings: [String] = []

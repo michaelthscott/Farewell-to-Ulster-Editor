@@ -16,8 +16,6 @@ struct PoemsTab: View {
     @State private var searchText = ""
     @State private var allTokens: [PoemSearchToken] = PoemSearchToken.allCases
     @State private var currentTokens: [PoemSearchToken] = []
-    @State private var addFailed: Bool = false
-    @State private var addError: String = ""
 
     var body: some View {
         @Bindable var navigation = navigation
@@ -33,12 +31,6 @@ struct PoemsTab: View {
                 ToolbarItem(placement: .primaryAction) {
                     Button(action: addPoem) {
                         Label("Add poem", systemImage: "plus")
-                    }
-                    .alert("Add failed: \(addError)", isPresented: $addFailed) {
-                        Button("Ok", role: .cancel) {
-                            addFailed = false
-                            addError = ""
-                        }
                     }
                 }
             }
@@ -94,14 +86,8 @@ struct PoemsTab: View {
         withAnimation {
             let newPoem = Poem()
             newPoem.status = .undevelopedIdea
-            do {
-                try storage.insertOrdered(newPoem)
+            if storage.add(newPoem) {
                 navigation.poemsPath.append(Path.poem(newPoem))
-            } catch {
-                // If the model is new and in an unsaved state, the context simply discards it.
-                storage.delete(newPoem)
-                addFailed = true
-                addError = error.localizedDescription
             }
         }
     }

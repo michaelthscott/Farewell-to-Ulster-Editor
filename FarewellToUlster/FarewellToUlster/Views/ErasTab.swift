@@ -13,8 +13,6 @@ struct ErasTab: View {
     @Environment(Navigation.self) private var navigation
     @Environment(Storage.self) private var storage
     @Query private var eras: [Era]
-    @State private var addFailed: Bool = false
-    @State private var addError: String = ""
     @State private var searchText = ""
 
     var body: some View {
@@ -55,12 +53,6 @@ struct ErasTab: View {
                     Button(action: addEra) {
                         Label("Add era", systemImage: "plus")
                     }
-                    .alert("Add failed: \(addError)", isPresented: $addFailed) {
-                        Button("Ok", role: .cancel) {
-                            addFailed = false
-                            addError = ""
-                        }
-                    }
                 }
             }
         }
@@ -79,14 +71,8 @@ struct ErasTab: View {
     private func addEra() {
         withAnimation {
             let newEra = Era()
-            do {
-                try storage.insertOrdered(newEra)
+            if storage.add(newEra) {
                 navigation.erasPath.append(Path.era(newEra))
-            } catch {
-                // If the model is new and in an unsaved state, the context simply discards it.
-                storage.delete(newEra)
-                addFailed = true
-                addError = error.localizedDescription
             }
         }
     }

@@ -16,8 +16,6 @@ struct SubjectsTab: View {
     @Query private var subjects: [Subject]
     @State private var selectedCategory: SubjectCategory?
     @State private var showOrdering: Bool = false
-    @State private var addFailed: Bool = false
-    @State private var addError: String = ""
     @State private var searchText = ""
 
     var body: some View {
@@ -66,12 +64,6 @@ struct SubjectsTab: View {
                         Button(action: addSubject) {
                             Label("Add subject", systemImage: "plus")
                         }
-                        .alert("Add failed: \(addError)", isPresented: $addFailed) {
-                            Button("Ok", role: .cancel) {
-                                addFailed = false
-                                addError = ""
-                            }
-                        }
                     }
                     ToolbarItem(placement: .secondaryAction) {
                         Button {
@@ -108,15 +100,8 @@ struct SubjectsTab: View {
             let index = subjects.count
             // Set before inserting, so insertOrdered's save includes it.
             let newSubject = Subject(sortIndex: index)
-            do {
-                try storage.insertOrdered(newSubject)
+            if storage.add(newSubject) {
                 navigation.subjectsPath.append(Path.subject(newSubject))
-                
-            } catch {
-                // If the model is new and in an unsaved state, the context simply discards it.
-                storage.delete(newSubject)
-                addFailed = true
-                addError = error.localizedDescription
             }
         }
     }
