@@ -7,6 +7,8 @@ Versions follow [Semantic Versioning](https://semver.org): MAJOR.MINOR.PATCH. Ea
 
 ## [Unreleased]
 
+## [1.3.0]
+
 ### Added
 
 - The Events tab groups events into a section for each era, in date order. An event goes in the first era containing its start date. Events outside every era are listed under "Other". Eras with no events have no section.
