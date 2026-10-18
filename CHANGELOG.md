@@ -7,6 +7,10 @@ Versions follow [Semantic Versioning](https://semver.org): MAJOR.MINOR.PATCH. Ea
 
 ## [Unreleased]
 
+### Changed
+
+- The Eras, Events, Subjects and Poems tabs add items through one shared `Storage.add(_:)`, and the "Add failed" alert is shown by ContentView, like "Save failed", in place of one alert per tab.
+
 ### Fixed
 
 - When adding an era, event, subject or poem fails, the "Add failed" alert now says what went wrong, such as the save error or a file order that can't be read. Before, it showed "Insert failed" or "Unknown". Errors from re-indexing subjects after a delete also keep their cause.
