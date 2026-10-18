@@ -15,6 +15,7 @@ Versions follow [Semantic Versioning](https://semver.org): MAJOR.MINOR.PATCH. Ea
 ### Fixed
 
 - When adding an era, event, subject or poem fails, the "Add failed" alert now says what went wrong, such as the save error or a file order that can't be read. Before, it showed "Insert failed" or "Unknown". Errors from re-indexing subjects after a delete also keep their cause.
+- The era and event editors label their date section "Period", capitalised like "Title" and "Text", in place of "period".
 - If the remaining subjects can't be re-indexed after a subject is deleted, the "Save failed" alert now shows the error. Before, it was only printed to the console. The new sort positions are saved together with the deletion.
 
 ## [1.2.0]
