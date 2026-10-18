@@ -5,6 +5,12 @@ All notable changes to the Farewell to Ulster editor app are documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versions follow [Semantic Versioning](https://semver.org): MAJOR.MINOR.PATCH. Each release is tagged `editor-vMAJOR.MINOR.PATCH`.
 
+## [Unreleased]
+
+### Added
+
+- The Events tab groups events into a section for each era, in date order. An event goes in the first era containing its start date. Events outside every era are listed under "Other". Eras with no events have no section.
+
 ## [1.2.1]
 
 ### Changed
