@@ -23,12 +23,20 @@ enum PoemSearchToken {
 }
 
 extension PoemSearchToken: CaseIterable {
+    static var statusCases: [PoemSearchToken] {
+        PoemStatus.allCases.map { .status($0) }
+    }
+
+    static var categoryCases: [PoemSearchToken] {
+        PoemCategory.allCases.map { .category($0) }
+    }
+
+    static var otherCases: [PoemSearchToken] {
+        [.uncategorised, .noSubjects, .duplicateTitle, .firstLineTitle]
+    }
+
     static var allCases: [PoemSearchToken] {
-        var allCases: [PoemSearchToken] = []
-        allCases.append(contentsOf: PoemStatus.allCases.map { .status($0) })
-        allCases.append(contentsOf: PoemCategory.allCases.map { .category($0) })
-        allCases.append(contentsOf: [uncategorised, noSubjects, duplicateTitle, firstLineTitle])
-        return allCases
+        statusCases + categoryCases + otherCases
     }
 }
 

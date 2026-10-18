@@ -16,6 +16,17 @@ struct PoemSearchTokenTests {
                                              .uncategorised, .noSubjects, .duplicateTitle, .firstLineTitle])
     }
 
+    @Test func testGroupedCases() {
+        #expect(PoemSearchToken.statusCases.allSatisfy { if case .status = $0 { true } else { false } })
+        #expect(PoemSearchToken.categoryCases.allSatisfy { if case .category = $0 { true } else { false } })
+        #expect(PoemSearchToken.otherCases.allSatisfy {
+            switch $0 {
+            case .status, .category: false
+            default: true
+            }
+        })
+    }
+
     @Test func testRawValue() async throws {
         #expect(PoemSearchToken(rawValue: "") == nil)
         #expect(PoemSearchToken(rawValue: "duplicate title") == .duplicateTitle)

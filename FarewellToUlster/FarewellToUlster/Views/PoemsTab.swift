@@ -14,7 +14,6 @@ struct PoemsTab: View {
     @Environment(Storage.self) private var storage
     @Query private var poems: [Poem]
     @State private var searchText = ""
-    @State private var allTokens: [PoemSearchToken] = PoemSearchToken.allCases
     @State private var currentTokens: [PoemSearchToken] = []
 
     var body: some View {
@@ -33,8 +32,16 @@ struct PoemsTab: View {
                     }
                 }
             }
-            .searchable(text: $searchText, tokens: $currentTokens, suggestedTokens: $allTokens) { token in
-                PoemSearchTokenView(token: token)
+            .searchable(text: $searchText, tokens: $currentTokens) { token in
+                Text(token.rawValue)
+            }
+            .searchSuggestions {
+                // Only one token is used for filtering, so stop suggesting once one is chosen.
+                if searchText.isEmpty && currentTokens.isEmpty {
+                    tokenSection("Status", tokens: PoemSearchToken.statusCases)
+                    tokenSection("Category", tokens: PoemSearchToken.categoryCases)
+                    tokenSection("Other", tokens: PoemSearchToken.otherCases)
+                }
             }
             .navigationTitle(title)
             .navigationBarTitleDisplayMode(.inline)
@@ -92,6 +99,15 @@ struct PoemsTab: View {
             }.sorted()
         }
         return filteredPoems(token: currentTokens.first).sorted()
+    }
+    
+    private func tokenSection(_ title: String, tokens: [PoemSearchToken]) -> some View {
+        Section(title) {
+            ForEach(tokens) { token in
+                Text(token.rawValue)
+                    .searchCompletion(token)
+            }
+        }
     }
     
     private func addPoem() {
