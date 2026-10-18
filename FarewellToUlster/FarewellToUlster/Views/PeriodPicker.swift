@@ -42,7 +42,7 @@ struct PeriodPicker: View {
             }
         } header: {
             HStack {
-                Text("period")
+                Text("Period")
                 Spacer()
                 Button(action: {
                     showPicker.toggle()
