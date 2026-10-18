@@ -42,6 +42,11 @@ struct ErasTab: View {
                     }
                 }
             }
+            .overlay {
+                if !searchText.isEmpty && selectedEras.isEmpty {
+                    ContentUnavailableView.search(text: searchText)
+                }
+            }
             .navigationDestination(for: Path.self) { path in
                 DestinationView(path: path)
             }

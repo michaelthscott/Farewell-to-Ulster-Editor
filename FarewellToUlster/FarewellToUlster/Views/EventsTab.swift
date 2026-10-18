@@ -42,6 +42,11 @@ struct EventsTab: View {
                     }
                 }
             }
+            .overlay {
+                if !searchText.isEmpty && selectedEvents.isEmpty {
+                    ContentUnavailableView.search(text: searchText)
+                }
+            }
             .navigationDestination(for: Path.self) { path in
                 DestinationView(path: path)
             }

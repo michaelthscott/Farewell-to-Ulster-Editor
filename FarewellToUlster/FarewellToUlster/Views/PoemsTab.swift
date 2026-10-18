@@ -19,8 +19,20 @@ struct PoemsTab: View {
 
     var body: some View {
         @Bindable var navigation = navigation
+        // Computed once, because searching the poems' text is slow enough to avoid doing twice.
+        let shownPoems = selectedPoems
         NavigationStack(path: $navigation.poemsPath) {
-            PoemsList(poems: selectedPoems)
+            PoemsList(poems: shownPoems)
+            .overlay {
+                if shownPoems.isEmpty {
+                    if !searchText.isEmpty {
+                        ContentUnavailableView.search(text: searchText)
+                    } else if let token = currentTokens.first {
+                        // ContentUnavailableView.search would show empty quotes, as there is no search text.
+                        ContentUnavailableView("No Results for “\(token.rawValue)”", systemImage: "magnifyingglass", description: Text("No poems match this token."))
+                    }
+                }
+            }
             .searchable(text: $searchText, tokens: $currentTokens, suggestedTokens: $allTokens) { token in
                 PoemSearchTokenView(token: token)
             }
