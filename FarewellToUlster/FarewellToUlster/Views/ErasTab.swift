@@ -82,15 +82,11 @@ struct ErasTab: View {
             do {
                 try storage.insertOrdered(newEra)
                 navigation.erasPath.append(Path.era(newEra))
-            } catch let error as FileOrderedError {
+            } catch {
                 // If the model is new and in an unsaved state, the context simply discards it.
                 storage.delete(newEra)
                 addFailed = true
-                addError = error.description
-            } catch {
-                storage.delete(newEra)
-                addFailed = true
-                addError = "Unknown"
+                addError = error.localizedDescription
             }
         }
     }

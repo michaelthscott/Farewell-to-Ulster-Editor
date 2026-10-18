@@ -89,15 +89,11 @@ struct EventsTab: View {
             do {
                 try storage.insertOrdered(newEvent)
                 navigation.eventsPath.append(Path.event(newEvent))
-            } catch let error as FileOrderedError {
+            } catch {
                 // If the model is new and in an unsaved state, the context simply discards it.
                 storage.delete(newEvent)
                 addFailed = true
-                addError = error.description
-            } catch {
-                storage.delete(newEvent)
-                addFailed = true
-                addError = "Unknown"
+                addError = error.localizedDescription
             }
         }
     }

@@ -13,18 +13,21 @@ nonisolated protocol FileOrdered: PersistentModel {
     var fileOrder: String { get set }
 }
 
-/// An error that can be encountered while inserting a model.
-enum FileOrderedError: Error, CustomStringConvertible {
+/// An error that can be encountered while inserting a model. Fetch and save errors are passed on as they are, so the message shows what actually went wrong.
+enum FileOrderedError: LocalizedError, CustomStringConvertible, Equatable {
     case alreadyExists
-    case parseFailed
-    case insertFailed
-    
+    case parseFailed(fileOrder: String)
+
     var description: String {
         switch self {
         case .alreadyExists: return "Already exists"
-        case .parseFailed: return "Parse failed"
-        case .insertFailed: return "Insert failed"
+        case .parseFailed(let fileOrder): return "Could not parse the file order \"\(fileOrder)\""
         }
+    }
+
+    /// Used by localizedDescription, so alerts that show it give the same message.
+    var errorDescription: String? {
+        description
     }
 }
 
@@ -37,22 +40,17 @@ extension Storage {
             throw FileOrderedError.alreadyExists
         }
         let fetchDescriptor = FetchDescriptor<T>()
-        do {
-            if let last = try container.mainContext.fetch(fetchDescriptor).sorted(by: { $0.fileOrder < $1.fileOrder }).last {
-                if let number = Int(last.fileOrder) {
-                    model.fileOrder = String(format: "%04d", number + 1)
-                } else {
-                    throw FileOrderedError.parseFailed
-                }
-            } else {
-                model.fileOrder = "0001"
+        if let last = try container.mainContext.fetch(fetchDescriptor).sorted(by: { $0.fileOrder < $1.fileOrder }).last {
+            guard let number = Int(last.fileOrder) else {
+                throw FileOrderedError.parseFailed(fileOrder: last.fileOrder)
             }
-            container.mainContext.insert(model)
-            if container.mainContext.hasChanges {
-                try container.mainContext.save()
-            }
-        } catch {
-            throw FileOrderedError.insertFailed
+            model.fileOrder = String(format: "%04d", number + 1)
+        } else {
+            model.fileOrder = "0001"
+        }
+        container.mainContext.insert(model)
+        if container.mainContext.hasChanges {
+            try container.mainContext.save()
         }
     }
 }

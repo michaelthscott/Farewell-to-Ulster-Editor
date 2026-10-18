@@ -54,6 +54,18 @@ class OrderedTests {
         }
     }
     
+    @Test func testInsertOrderedParseFailed() async throws {
+        let storage = try #require(Storage.testStorage(with: "SmallBook"))
+        let poems = try storage.container.mainContext.fetch(fetchDescriptor)
+        // Sorts after the numeric values, so it is the one insertOrdered tries to parse.
+        poems[0].fileOrder = "abc"
+        let error = #expect(throws: FileOrderedError.parseFailed(fileOrder: "abc")) {
+            try storage.insertOrdered(Poem())
+        }
+        #expect(error?.localizedDescription == "Could not parse the file order \"abc\"")
+        #expect(try storage.container.mainContext.fetchCount(fetchDescriptor) == 6)
+    }
+
     @Test func testInsertOrderedFirstInsert() async throws {
         let storage = try #require(Storage.testStorage(with: "SmallBook"))
         let poems = try storage.container.mainContext.fetch(fetchDescriptor)
