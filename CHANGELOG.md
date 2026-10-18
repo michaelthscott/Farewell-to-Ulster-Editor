@@ -10,6 +10,7 @@ Versions follow [Semantic Versioning](https://semver.org): MAJOR.MINOR.PATCH. Ea
 ### Changed
 
 - The Eras, Events, Subjects and Poems tabs add items through one shared `Storage.add(_:)`, and the "Add failed" alert is shown by ContentView, like "Save failed", in place of one alert per tab.
+- Adding an item fetches only the one with the highest file order, sorted by the database, in place of fetching and sorting every item of that kind.
 
 ### Fixed
 
