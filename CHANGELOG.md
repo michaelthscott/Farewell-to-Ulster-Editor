@@ -5,6 +5,12 @@ All notable changes to the Farewell to Ulster editor app are documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versions follow [Semantic Versioning](https://semver.org): MAJOR.MINOR.PATCH. Each release is tagged `editor-vMAJOR.MINOR.PATCH`.
 
+## [Unreleased]
+
+### Fixed
+
+- When adding an era, event, subject or poem fails, the "Add failed" alert now says what went wrong, such as the save error or a file order that can't be read. Before, it showed "Insert failed" or "Unknown". Errors from re-indexing subjects after a delete also keep their cause.
+
 ## [1.2.0]
 
 ### Changed
