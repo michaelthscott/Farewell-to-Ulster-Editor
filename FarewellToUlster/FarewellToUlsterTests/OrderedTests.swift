@@ -84,6 +84,22 @@ class OrderedTests {
         #expect(try storage.container.mainContext.fetchCount(fetchDescriptor) == 6)
     }
 
+    /// insertOrdered sorts on fileOrder in the database, so check that the sort works for every FileOrdered model, not just Poem.
+    @Test func testInsertOrderedEveryModel() async throws {
+        let storage = try #require(Storage.testStorage(with: "SmallBook"))
+        try expectNextFileOrder(Era(), in: storage)
+        try expectNextFileOrder(Event(), in: storage)
+        try expectNextFileOrder(Subject(sortIndex: 0), in: storage)
+        try expectNextFileOrder(Poem(), in: storage)
+    }
+
+    private func expectNextFileOrder<T: FileOrdered>(_ model: T, in storage: Storage) throws {
+        let existing = try storage.container.mainContext.fetch(FetchDescriptor<T>())
+        let highest = existing.compactMap { Int($0.fileOrder) }.max() ?? 0
+        try storage.insertOrdered(model)
+        #expect(model.fileOrder == String(format: "%04d", highest + 1), "\(T.self)")
+    }
+
     @Test func testInsertOrderedFirstInsert() async throws {
         let storage = try #require(Storage.testStorage(with: "SmallBook"))
         let poems = try storage.container.mainContext.fetch(fetchDescriptor)

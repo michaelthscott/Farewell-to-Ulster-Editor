@@ -39,8 +39,10 @@ extension Storage {
         guard existing == nil else {
             throw FileOrderedError.alreadyExists
         }
-        let fetchDescriptor = FetchDescriptor<T>()
-        if let last = try container.mainContext.fetch(fetchDescriptor).sorted(by: { $0.fileOrder < $1.fileOrder }).last {
+        // Only the highest fileOrder is needed, so let the database sort and fetch just that one.
+        var fetchDescriptor = FetchDescriptor<T>(sortBy: [SortDescriptor(\.fileOrder, order: .reverse)])
+        fetchDescriptor.fetchLimit = 1
+        if let last = try container.mainContext.fetch(fetchDescriptor).first {
             guard let number = Int(last.fileOrder) else {
                 throw FileOrderedError.parseFailed(fileOrder: last.fileOrder)
             }
