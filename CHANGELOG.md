@@ -7,6 +7,8 @@ Versions follow [Semantic Versioning](https://semver.org): MAJOR.MINOR.PATCH. Ea
 
 ## [Unreleased]
 
+## [1.5.0]
+
 ### Added
 
 - The Book tab shows a red ✕ badge after changes are saved, until an update is committed to GitHub with no failures. The flag is kept in UserDefaults, so the badge survives a relaunch. Tab badges don't draw SF Symbols, so a ✕ on the red badge stands in for `x.circle.fill`.
