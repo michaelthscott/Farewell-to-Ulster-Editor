@@ -137,7 +137,13 @@ struct BookTab: View {
     
     private func commitUpdate() async {
         var outcome = CommitOutcome()
-        defer { self.outcome = outcome }
+        defer {
+            // Only a complete update clears the badge, so a failed commit is still flagged.
+            if outcome.failures.isEmpty {
+                storage.hasUncommittedChanges = false
+            }
+            self.outcome = outcome
+        }
 
         // Fetch everything before committing anything, so a failed fetch stops the update
         // rather than committing a book with parts missing.

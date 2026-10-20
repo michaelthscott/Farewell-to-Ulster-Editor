@@ -19,6 +19,10 @@ struct ContentView: View {
             Tab("Book", systemImage: "book", value: TabValue.book) {
                 BookTab()
             }
+            .badge(
+                // Tab badges don't draw symbols, so a white ✕ on the red badge stands in for x.circle.fill.
+                storage.hasUncommittedChanges ? Text("✕") : nil
+            )
             Tab("Eras", systemImage: "calendar", value: TabValue.eras) {
                 ErasTab()
             }

@@ -45,8 +45,17 @@ enum StorageError: LocalizedError, CustomStringConvertible {
     /// References in the JSON that didn't match any era, event or subject, and so were left out when the book was loaded.
     /// ContentView shows them in an alert and then clears them.
     var loadWarnings: [String] = []
-    
+    /// True when changes have been saved since the last update was committed to GitHub without failures. ContentView badges the Book tab while it's set.
+    /// Kept in UserDefaults so it survives a relaunch, except for in-memory storage, so tests and previews don't share it.
+    var hasUncommittedChanges: Bool {
+        didSet { defaults?.set(hasUncommittedChanges, forKey: Self.uncommittedChangesKey) }
+    }
+    private let defaults: UserDefaults?
+    private static let uncommittedChangesKey = "hasUncommittedChanges"
+
     init(isStoredInMemoryOnly: Bool = false, assetName: String = "Farewell-to-Ulster", bundle: Bundle = Bundle.main) throws {
+        defaults = isStoredInMemoryOnly ? nil : UserDefaults.standard
+        hasUncommittedChanges = defaults?.bool(forKey: Self.uncommittedChangesKey) ?? false
         let schema = Schema([
             Book.self,
             Era.self,
@@ -171,6 +180,7 @@ extension Storage {
         guard container.mainContext.hasChanges else { return }
         do {
             try container.mainContext.save()
+            hasUncommittedChanges = true
         } catch {
             saveError = error
         }

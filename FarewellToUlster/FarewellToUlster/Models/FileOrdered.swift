@@ -53,6 +53,7 @@ extension Storage {
         container.mainContext.insert(model)
         if container.mainContext.hasChanges {
             try container.mainContext.save()
+            hasUncommittedChanges = true
         }
     }
 
