@@ -16,9 +16,9 @@ enum MDType: String, Codable {
     var path: String {
         switch self {
         case .none: return ""
-        case .site: return "/Farewell-to-Ulster/"
-        case .era: return "/Farewell-to-Ulster/Eras/"
-        case .poem: return "/Farewell-to-Ulster/Poems/"
+        case .site: return "/"
+        case .era: return "/Eras/"
+        case .poem: return "/Poems/"
         }
     }
 }

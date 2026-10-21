@@ -16,38 +16,38 @@ struct MDTests {
         <a href=""></a>
         """)
         #expect(a(info: .site) == """
-        <a href="/Farewell-to-Ulster/">Farewell to Ulster</a>
+        <a href="/">Farewell to Ulster</a>
         """)
         #expect(a(info: .poem(title: "It's Me!", number: "1234")) == """
-        <a href="/Farewell-to-Ulster/Poems/1234.html">It's Me!</a>
+        <a href="/Poems/1234.html">It's Me!</a>
         """)
         #expect(a(info: .poem(title: "Why Not?", number: "2345"), classValue: "poo") == """
-        <a class="poo" href="/Farewell-to-Ulster/Poems/2345.html">Why Not?</a>
+        <a class="poo" href="/Poems/2345.html">Why Not?</a>
         """)
         #expect(a(info: .era(title: "Hey", number: "3456")) == """
-        <a href="/Farewell-to-Ulster/Eras/3456.html">Hey</a>
+        <a href="/Eras/3456.html">Hey</a>
         """)
         #expect(a(info: .era(title: "Hey What?", number: "4567"), classValue: "pop") == """
-        <a class="pop" href="/Farewell-to-Ulster/Eras/4567.html">Hey What?</a>
+        <a class="pop" href="/Eras/4567.html">Hey What?</a>
         """)
     }
     
     @Test func testBreadcrumb() async throws {
         #expect(MDBreadcrumb(info: .none).markdown == """
         <nav class="breadcrumb">
-        <a href="/Farewell-to-Ulster/">Farewell to Ulster</a> /
+        <a href="/">Farewell to Ulster</a> /
         <a href=""></a>
         </nav>
         """)
         #expect(MDBreadcrumb(info: .era(title: "Now", number: "1234")).markdown == """
         <nav class="breadcrumb">
-        <a href="/Farewell-to-Ulster/">Farewell to Ulster</a> /
-        <a href="/Farewell-to-Ulster/Eras/1234.html">Now</a>
+        <a href="/">Farewell to Ulster</a> /
+        <a href="/Eras/1234.html">Now</a>
         </nav>
         """)
         #expect(MDBreadcrumb(info: .poem(title: "Now", number: "1234")).markdown == """
         <nav class="breadcrumb">
-        <a href="/Farewell-to-Ulster/">Farewell to Ulster</a> /
+        <a href="/">Farewell to Ulster</a> /
         <a href=""></a>
         </nav>
         """)
@@ -73,8 +73,8 @@ struct MDTests {
         title: Talking
         ---
         <nav class="breadcrumb">
-        <a href="/Farewell-to-Ulster/">Farewell to Ulster</a> /
-        <a href="/Farewell-to-Ulster/Eras/0001.html">Sometime</a>
+        <a href="/">Farewell to Ulster</a> /
+        <a href="/Eras/0001.html">Sometime</a>
         </nav>
 
         <header class="post-header">
@@ -84,8 +84,8 @@ struct MDTests {
         Hello world
 
         <nav class="prev-next">
-        <a class="prev" href="/Farewell-to-Ulster/Poems/0001.html">← Previous One</a>
-        <a class="next" href="/Farewell-to-Ulster/Poems/0003.html">Next One →</a>
+        <a class="prev" href="/Poems/0001.html">← Previous One</a>
+        <a class="next" href="/Poems/0003.html">Next One →</a>
         </nav>
         """)
     }
@@ -103,8 +103,8 @@ struct MDTests {
         title: Talking
         ---
         <nav class="breadcrumb">
-        <a href="/Farewell-to-Ulster/">Farewell to Ulster</a> /
-        <a href="/Farewell-to-Ulster/Eras/0001.html">Sometime</a>
+        <a href="/">Farewell to Ulster</a> /
+        <a href="/Eras/0001.html">Sometime</a>
         </nav>
 
         <header class="post-header">
@@ -115,7 +115,7 @@ struct MDTests {
 
         <nav class="prev-next">
         <span></span>
-        <a class="next" href="/Farewell-to-Ulster/Poems/0003.html">Next One →</a>
+        <a class="next" href="/Poems/0003.html">Next One →</a>
         </nav>
         """)
     }
@@ -132,8 +132,8 @@ struct MDTests {
         title: Talking
         ---
         <nav class="breadcrumb">
-        <a href="/Farewell-to-Ulster/">Farewell to Ulster</a> /
-        <a href="/Farewell-to-Ulster/Eras/0001.html">Sometime</a>
+        <a href="/">Farewell to Ulster</a> /
+        <a href="/Eras/0001.html">Sometime</a>
         </nav>
 
         <header class="post-header">
@@ -143,7 +143,7 @@ struct MDTests {
         Hello world
 
         <nav class="prev-next">
-        <a class="prev" href="/Farewell-to-Ulster/Poems/0001.html">← Previous One</a>
+        <a class="prev" href="/Poems/0001.html">← Previous One</a>
         <span></span>
         </nav>
         """)
@@ -161,8 +161,8 @@ struct MDTests {
         title: Talking
         ---
         <nav class="breadcrumb">
-        <a href="/Farewell-to-Ulster/">Farewell to Ulster</a> /
-        <a href="/Farewell-to-Ulster/Eras/0001.html">Sometime</a>
+        <a href="/">Farewell to Ulster</a> /
+        <a href="/Eras/0001.html">Sometime</a>
         </nav>
 
         <header class="post-header">
@@ -193,7 +193,7 @@ struct MDTests {
         title: Sometime
         ---
         <nav class="breadcrumb">
-        <a href="/Farewell-to-Ulster/">Farewell to Ulster</a> /
+        <a href="/">Farewell to Ulster</a> /
         <a href=""></a>
         </nav>
 
@@ -204,7 +204,7 @@ struct MDTests {
         Sometime is now
 
         <ul>
-        <li><a href="/Farewell-to-Ulster/Poems/0002.html">Talking</a></li>
+        <li><a href="/Poems/0002.html">Talking</a></li>
         </ul>
         """)
     }

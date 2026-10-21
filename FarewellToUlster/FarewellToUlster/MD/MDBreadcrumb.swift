@@ -12,7 +12,7 @@ struct MDBreadcrumb {
 
     var markdown: String {
         html("nav", ["class": "breadcrumb"]) {
-            html("a", ["href": "/Farewell-to-Ulster/"], inline: true) { "Farewell to Ulster" } + " /"
+            html("a", ["href": MDType.site.path], inline: true) { "Farewell to Ulster" } + " /"
             if info.type == .era {
                 a(info: info)
             } else {

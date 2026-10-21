@@ -28,7 +28,7 @@ struct MDEra {
         html("ul") {
             for poem in poems {
                 html("li", inline: true) {
-                    html("a", ["href": "/Farewell-to-Ulster/Poems/\(poem.info.number).html"], inline: true) {
+                    html("a", ["href": "\(MDType.poem.path)\(poem.info.number).html"], inline: true) {
                         poem.info.title
                     }
                 }
