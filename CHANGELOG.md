@@ -7,6 +7,8 @@ Versions follow [Semantic Versioning](https://semver.org): MAJOR.MINOR.PATCH. Ea
 
 ## [Unreleased]
 
+## [2.0.0]
+
 ### Changed
 
 - Links in the generated era and poem pages start at the site root (`/`, `/Eras/`, `/Poems/`) in place of `/Farewell-to-Ulster/`, because the site has moved from `michaelthscott.github.io/Farewell-to-Ulster` to `farewell-to-ulster.michaelthscott.org`. The paths are defined only in `MDType`. The pages already in the site repo keep the old links until the next commit from the app rewrites them.
