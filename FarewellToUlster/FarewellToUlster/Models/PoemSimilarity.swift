@@ -20,19 +20,48 @@ actor PoemSimilarity {
     static let thresholdKey = "centredSimilarityThreshold"
     static let defaultThreshold = 0.4
     /// The practical range for the threshold: from roughly the top 10% of pairs in an era to above the most similar pair.
-    static let thresholdRange = 0.25...0.7
+    /// The upper bound is above the text maximum, because shared subjects add to a pair's score.
+    static let thresholdRange = 0.25...0.9
 
     /// The threshold brought within the practical range, in case an older setting is outside it.
     nonisolated static func practicalThreshold(_ threshold: Double) -> Double {
         min(max(threshold, thresholdRange.lowerBound), thresholdRange.upperBound)
     }
 
+    /// The UserDefaults key, default and range for how much shared subjects add to a pair's score.
+    /// At 0.2, sharing a rare subject adds about 0.2, roughly the gap between the top 10% and top 1% of text scores.
+    static let subjectWeightKey = "subjectWeight"
+    static let defaultSubjectWeight = 0.2
+    static let subjectWeightRange = 0.0...0.5
+
     static let shared = PoemSimilarity()
 
-    /// A snapshot of a poem's text, which can be sent to the actor.
+    /// A snapshot of a poem's text and subjects, which can be sent to the actor.
     nonisolated struct PoemText: Hashable, Sendable {
         let uuid: UUID
         let text: String
+        let subjects: [UUID]
+
+        init(uuid: UUID, text: String, subjects: [UUID] = []) {
+            self.uuid = uuid
+            self.text = text
+            self.subjects = subjects
+        }
+    }
+
+    /// How strongly the subjects two poems share suggest they repeat a memory, from 0 to 1.
+    /// Each shared subject counts by its rarity in the book, ln(poems / poems with the subject),
+    /// so sharing a rare subject counts far more than sharing one used throughout the book.
+    /// The total is divided by the rarity of a subject used by just two poems, and capped at 1.
+    /// It isn't divided by how many subjects the poems have, so two poems tagged only with a
+    /// common subject don't score as if they were the same.
+    nonisolated static func subjectBonus(shared: [UUID], frequencies: [UUID: Int], poemCount: Int) -> Float {
+        guard poemCount > 2 else { return 0 }
+        let total = shared.reduce(Float(0)) { sum, subject in
+            let frequency = max(frequencies[subject] ?? 2, 2)
+            return sum + log(Float(poemCount) / Float(frequency))
+        }
+        return min(1, total / log(Float(poemCount) / 2))
     }
 
     private struct CachedVector {
@@ -60,16 +89,26 @@ actor PoemSimilarity {
     }
 
     /// The pairs of poems whose similarity is at least the threshold, most similar first.
-    /// With a background, the average of the background poems is subtracted from each poem before comparing,
-    /// so what the poems all have in common doesn't count towards their similarity.
-    func similarPoemPairs(poems: [PoemText], threshold: Float, centredOn background: [PoemText]? = nil) -> [PoemPair] {
+    /// With the book's poems, the average poem is subtracted from each poem before comparing,
+    /// so what the poems all have in common doesn't count towards their similarity, and the
+    /// subjects a pair shares add subjectWeight × subjectBonus to its similarity.
+    func similarPoemPairs(poems: [PoemText], threshold: Float, book: [PoemText]? = nil, subjectWeight: Float = 0) -> [PoemPair] {
         var embedded = poems.compactMap { poem in
-            vector(for: poem).map { (uuid: poem.uuid, vector: $0) }
+            vector(for: poem).map { (uuid: poem.uuid, vector: $0, subjects: Set(poem.subjects)) }
         }
         guard embedded.count >= 2 else { return [] }
 
-        if let background {
-            let backgroundVectors = background.compactMap { vector(for: $0) }
+        // How many of the book's poems have each subject, for weighting shared subjects by rarity.
+        let bookPoems = book ?? poems
+        var frequencies: [UUID: Int] = [:]
+        for poem in bookPoems {
+            for subject in Set(poem.subjects) {
+                frequencies[subject, default: 0] += 1
+            }
+        }
+
+        if let book {
+            let backgroundVectors = book.compactMap { vector(for: $0) }
             if let first = backgroundVectors.first {
                 // The average poem: the sum of the vectors divided by their number.
                 var mean = [Float](repeating: 0, count: first.count)
@@ -82,7 +121,7 @@ actor PoemSimilarity {
                 embedded = embedded.map { e in
                     var centred = [Float](repeating: 0, count: e.vector.count)
                     vDSP_vsub(mean, 1, e.vector, 1, &centred, 1, vDSP_Length(centred.count))
-                    return (e.uuid, Self.normalised(centred))
+                    return (e.uuid, Self.normalised(centred), e.subjects)
                 }
             }
         }
@@ -111,7 +150,11 @@ actor PoemSimilarity {
         // Only scan the upper triangle (i < j) — matrix is symmetric, diagonal is self-similarity == 1
         for i in 0..<n {
             for j in (i + 1)..<n {
-                let similarity = matrix[i * n + j]
+                var similarity = matrix[i * n + j]
+                if subjectWeight > 0 {
+                    let shared = Array(embedded[i].subjects.intersection(embedded[j].subjects))
+                    similarity += subjectWeight * Self.subjectBonus(shared: shared, frequencies: frequencies, poemCount: bookPoems.count)
+                }
                 if similarity >= threshold {
                     pairs.append(PoemPair(embedded[i].uuid, embedded[j].uuid, similarity: similarity))
                 }
@@ -158,9 +201,9 @@ actor PoemSimilarity {
 }
 
 nonisolated extension Poem {
-    /// The text compared for similarity. The title is left out: it is often the first line,
+    /// The text and subjects compared for similarity. The title is left out: it is often the first line,
     /// and including it ranked poems sharing a line below poems that don't.
     var similarityText: PoemSimilarity.PoemText {
-        PoemSimilarity.PoemText(uuid: uuid, text: text)
+        PoemSimilarity.PoemText(uuid: uuid, text: text, subjects: (subjects ?? []).map(\.uuid).sorted { $0.uuidString < $1.uuidString })
     }
 }

@@ -27,19 +27,21 @@ struct PoemPairsList: View {
     }
 
     /// Everything the pairs depend on. Use as a task id, so the pairs are found again whenever
-    /// a poem's text, the poems, the book's poems, or the threshold change.
+    /// a poem's text or subjects, the poems, the book's poems, the threshold, or the subject weight change.
     struct Request: Equatable {
         let poems: [PoemSimilarity.PoemText]
         /// Every poem in the book. Their average is subtracted before comparing, so the voice and themes
-        /// common to the whole book don't make every pair look similar.
+        /// common to the whole book don't make every pair look similar. They also show how rare each subject is.
         let bookPoems: [PoemSimilarity.PoemText]
         let threshold: Double
+        let subjectWeight: Double
 
-        init(poems: [Poem], bookPoems: [Poem], threshold: Double) {
+        init(poems: [Poem], bookPoems: [Poem], threshold: Double, subjectWeight: Double) {
             // Sorted by UUID, so the order poems are fetched in doesn't matter.
             self.poems = Self.sortedTexts(poems)
             self.bookPoems = Self.sortedTexts(bookPoems)
             self.threshold = threshold
+            self.subjectWeight = subjectWeight
         }
 
         private static func sortedTexts(_ poems: [Poem]) -> [PoemSimilarity.PoemText] {
@@ -49,7 +51,7 @@ struct PoemPairsList: View {
 
     /// The pairs of similar poems, most similar first.
     static func pairs(in poems: [Poem], for request: Request) async -> [Pair] {
-        let found = await PoemSimilarity.shared.similarPoemPairs(poems: request.poems, threshold: Float(request.threshold), centredOn: request.bookPoems)
+        let found = await PoemSimilarity.shared.similarPoemPairs(poems: request.poems, threshold: Float(request.threshold), book: request.bookPoems, subjectWeight: Float(request.subjectWeight))
         let poemsByUUID = Dictionary(poems.map { ($0.uuid, $0) }, uniquingKeysWith: { first, _ in first })
         return found.compactMap { pair in
             guard let poem1 = poemsByUUID[pair.uuid1], let poem2 = poemsByUUID[pair.uuid2] else { return nil }
@@ -69,7 +71,7 @@ struct PoemPairsList: View {
             PoemPairsList(pairs: pairs)
         }
         .task {
-            pairs = await PoemPairsList.pairs(in: poems, for: .init(poems: poems, bookPoems: poems, threshold: 0.0))
+            pairs = await PoemPairsList.pairs(in: poems, for: .init(poems: poems, bookPoems: poems, threshold: 0.0, subjectWeight: PoemSimilarity.defaultSubjectWeight))
         }
         .navigationDestination(for: Path.self) { path in
             DestinationView(path: path)

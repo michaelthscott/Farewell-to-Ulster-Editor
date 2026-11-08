@@ -91,7 +91,7 @@ struct SimilarityTests {
         let texts = storage.poems.map(\.similarityText)
         let similarity = PoemSimilarity()
         let plain = await similarity.similarPoemPairs(poems: texts, threshold: -2)
-        let centred = await similarity.similarPoemPairs(poems: texts, threshold: -2, centredOn: texts)
+        let centred = await similarity.similarPoemPairs(poems: texts, threshold: -2, book: texts)
         #expect(centred.count == plain.count)
         let similarities = centred.map(\.similarity)
         #expect(similarities == similarities.sorted(by: >))
@@ -101,6 +101,56 @@ struct SimilarityTests {
         let titles = Dictionary(uniqueKeysWithValues: storage.poems.map { ($0.uuid, $0.title) })
         let top = try #require(centred.first)
         #expect(Set([titles[top.uuid1], titles[top.uuid2]]) == Set(["Azure twinkles", "Twilight"]))
+    }
+
+    @Test("Shared subjects count by their rarity")
+    func testSubjectBonus() {
+        let rare = UUID()
+        let common = UUID()
+        let frequencies = [rare: 2, common: 90]
+        #expect(PoemSimilarity.subjectBonus(shared: [], frequencies: frequencies, poemCount: 900) == 0)
+        #expect(abs(PoemSimilarity.subjectBonus(shared: [rare], frequencies: frequencies, poemCount: 900) - 1) < 0.0001)
+        let commonBonus = PoemSimilarity.subjectBonus(shared: [common], frequencies: frequencies, poemCount: 900)
+        #expect(commonBonus > 0 && commonBonus < 0.5)
+        #expect(PoemSimilarity.subjectBonus(shared: [rare, common], frequencies: frequencies, poemCount: 900) == 1)
+    }
+
+    @Test("A subject weight of 0 ignores subjects")
+    func testZeroSubjectWeight() async throws {
+        let storage = try #require(Storage.testStorage(with: "SmallBook"))
+        let texts = storage.poems.map(\.similarityText)
+        let similarity = PoemSimilarity()
+        let centred = await similarity.similarPoemPairs(poems: texts, threshold: -2, book: texts)
+        let weighted = await similarity.similarPoemPairs(poems: texts, threshold: -2, book: texts, subjectWeight: 0)
+        #expect(centred.map(\.id) == weighted.map(\.id))
+        #expect(centred.map(\.similarity) == weighted.map(\.similarity))
+    }
+
+    @Test("A shared rare subject raises a pair more than a shared common one")
+    func testSharedSubjectsRaisePairs() async throws {
+        let storage = try #require(Storage.testStorage(with: "SmallBook"))
+        let plain = storage.poems.map { PoemSimilarity.PoemText(uuid: $0.uuid, text: $0.text) }
+        let similarity = PoemSimilarity()
+        let unweighted = await similarity.similarPoemPairs(poems: plain, threshold: -2, book: plain)
+        // The least similar pair on text alone.
+        let last = try #require(unweighted.last)
+        let rare = UUID()
+        let common = UUID()
+        func tagged(_ subjectFor: (PoemSimilarity.PoemText) -> [UUID]) -> [PoemSimilarity.PoemText] {
+            plain.map { PoemSimilarity.PoemText(uuid: $0.uuid, text: $0.text, subjects: subjectFor($0)) }
+        }
+        // The rare subject is only on the least similar pair; the common one is on every poem but one.
+        let withRare = tagged { [last.uuid1, last.uuid2].contains($0.uuid) ? [rare] : [] }
+        let others = plain.map(\.uuid).filter { $0 != last.uuid1 && $0 != last.uuid2 }
+        let withCommon = tagged { $0.uuid == others.first ? [] : [common] }
+        func rank(_ texts: [PoemSimilarity.PoemText]) async -> Int? {
+            await similarity.similarPoemPairs(poems: texts, threshold: -2, book: texts, subjectWeight: 0.5)
+                .firstIndex { $0.id == last.id }
+        }
+        let rareRank = try #require(await rank(withRare))
+        let commonRank = try #require(await rank(withCommon))
+        #expect(rareRank < unweighted.count - 1)
+        #expect(rareRank < commonRank)
     }
 
     @Test("Thresholds are brought within the practical range")

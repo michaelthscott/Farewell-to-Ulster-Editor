@@ -17,6 +17,7 @@ struct EraEditor: View {
     @State private var editedText = ""
     @State private var selectedPeriod: DateInterval = .init()
     @AppStorage(PoemSimilarity.thresholdKey) private var threshold = PoemSimilarity.defaultThreshold
+    @AppStorage(PoemSimilarity.subjectWeightKey) private var subjectWeight = PoemSimilarity.defaultSubjectWeight
     // The similar poems section is hidden while there are none.
     @State private var similarPairs: [PoemPairsList.Pair] = []
     // Every poem in the book, whose average is subtracted when finding similar poems.
@@ -62,7 +63,7 @@ struct EraEditor: View {
     }
 
     private var similarityRequest: PoemPairsList.Request {
-        PoemPairsList.Request(poems: era.poems ?? [], bookPoems: bookPoems, threshold: PoemSimilarity.practicalThreshold(threshold))
+        PoemPairsList.Request(poems: era.poems ?? [], bookPoems: bookPoems, threshold: PoemSimilarity.practicalThreshold(threshold), subjectWeight: subjectWeight)
     }
     
 }
