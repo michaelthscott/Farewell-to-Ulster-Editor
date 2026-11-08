@@ -7,6 +7,15 @@ Versions follow [Semantic Versioning](https://semver.org): MAJOR.MINOR.PATCH. Ea
 
 ## [Unreleased]
 
+### Changed
+
+- When there is no book, the app loads `_data/Farewell-to-Ulster.json` from the site repo, so the copy on GitHub is the only source of the book. It shows "Loading book from GitHub…" while it downloads, and the error with a Retry button if the download fails, for example when offline. The download doesn't use the GitHub token, because the repo is public and the token can only be entered once a book has loaded. A freshly loaded book has no ✕ badge. A store that already has a book never goes to the network.
+- `CodableTests` read the test bundle's `SmallBook` in place of the bundled book. The export test checks that exporting the same book twice gives the same bytes, in place of comparing character counts with the file.
+
+### Removed
+
+- The bundled copy of the book in the asset catalog, `scripts/refresh-seed.sh`, and the "Refreshing seed data" step in `release.sh`.
+
 ## [2.0.0]
 
 ### Changed
