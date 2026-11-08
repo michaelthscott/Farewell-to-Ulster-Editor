@@ -7,6 +7,8 @@ Versions follow [Semantic Versioning](https://semver.org): MAJOR.MINOR.PATCH. Ea
 
 ## [Unreleased]
 
+## [2.3.0]
+
 ### Changed
 
 - Subjects that two poems share raise their place in an era's Similar Poems list. Each shared subject counts by its rarity in the book, so sharing a rare subject such as Tollymore counts far more than sharing Longshot, Noel or me. Pairs that share no subject are still listed on their text alone. A "Subject weight" slider in Settings (0.00–0.50, default 0.20) sets how much subjects count; 0 ignores them. The threshold slider now goes up to 0.90.
