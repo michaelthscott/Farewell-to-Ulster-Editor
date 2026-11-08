@@ -7,6 +7,8 @@ Versions follow [Semantic Versioning](https://semver.org): MAJOR.MINOR.PATCH. Ea
 
 ## [Unreleased]
 
+## [2.2.0]
+
 ### Added
 
 - A "Similar Poems" section at the bottom of each era's page lists pairs of poems in that era that may repeat a memory, most similar first, as a backlog for review. Tapping a pair shows the two titles, each linking to its poem's editor. The list recalculates when poems or the threshold change, and is hidden when there are no pairs. Before comparing, the average of every poem in the book is subtracted, so the voice and themes common to the whole book don't make every pair look similar.
