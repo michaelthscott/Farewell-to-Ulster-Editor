@@ -7,6 +7,8 @@ Versions follow [Semantic Versioning](https://semver.org): MAJOR.MINOR.PATCH. Ea
 
 ## [Unreleased]
 
+## [2.1.0]
+
 ### Changed
 
 - When there is no book, the app loads `_data/Farewell-to-Ulster.json` from the site repo, so the copy on GitHub is the only source of the book. It shows "Loading book from GitHub…" while it downloads, and the error with a Retry button if the download fails, for example when offline. The download doesn't use the GitHub token, because the repo is public and the token can only be entered once a book has loaded. A freshly loaded book has no ✕ badge. A store that already has a book never goes to the network.
