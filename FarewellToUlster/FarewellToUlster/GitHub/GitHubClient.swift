@@ -23,6 +23,11 @@ struct GitHubClient {
         return digest.map { String(format: "%02x", $0) }.joined()
     }
 
+    /// The site repo, which holds the book's JSON and the pages generated from it.
+    static let site = GitHubClient(owner: "michaelthscott", repo: "Farewell-to-Ulster", branch: "main")
+    /// The book's JSON in the site repo. This is the only copy: the app loads it when there is no book, and Commit update writes it.
+    static let bookPath = "_data/Farewell-to-Ulster.json"
+
     let owner: String
     let repo: String
     let branch: String
@@ -66,14 +71,24 @@ struct GitHubClient {
         return components.url!
     }
 
-    private func request(_ path: String, method: String = "GET", body: (any Encodable)? = nil) async throws -> Data {
-        guard let token = try iCloudKeychain.load() else {
-            throw GitHubCommitError.noToken
-        }
+    /// Downloads a file's content from the branch, without a token. The site repo is public, and the app loads
+    /// the book before the token can be entered, so a missing or expired token must not stop the download.
+    /// Uses the API rather than raw.githubusercontent.com, whose CDN can serve a stale copy for several minutes after a commit.
+    func fileContent(path: String) async throws -> Data {
+        try await request("contents/\(path)?ref=\(branch)", accept: "application/vnd.github.raw", authenticated: false)
+    }
+
+    private func request(_ path: String, method: String = "GET", body: (any Encodable)? = nil,
+                         accept: String = "application/vnd.github+json", authenticated: Bool = true) async throws -> Data {
         var req = URLRequest(url: url(for: path))
         req.httpMethod = method
-        req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        req.setValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
+        if authenticated {
+            guard let token = try iCloudKeychain.load() else {
+                throw GitHubCommitError.noToken
+            }
+            req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+        req.setValue(accept, forHTTPHeaderField: "Accept")
         if let body {
             req.httpBody = try JSONEncoder().encode(body)
             req.setValue("application/json", forHTTPHeaderField: "Content-Type")

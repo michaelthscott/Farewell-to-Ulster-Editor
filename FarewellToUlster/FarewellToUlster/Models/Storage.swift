@@ -14,6 +14,7 @@ enum StorageError: LocalizedError, CustomStringConvertible {
     case noModelContainer(underlying: any Error)
     case missingAsset(name: String)
     case invalidAsset(name: String, underlying: any Error)
+    case invalidGitHubFile(path: String, underlying: any Error)
     case noBook
 
     var description: String {
@@ -24,6 +25,8 @@ enum StorageError: LocalizedError, CustomStringConvertible {
             return "Could not find the asset \(name)"
         case .invalidAsset(let name, let underlying):
             return "Could not decode the asset \(name): \(underlying)"
+        case .invalidGitHubFile(let path, let underlying):
+            return "Could not decode \(path) from GitHub: \(underlying)"
         case .noBook:
             return "There is no book in the storage"
         }
@@ -53,7 +56,8 @@ enum StorageError: LocalizedError, CustomStringConvertible {
     private let defaults: UserDefaults?
     private static let uncommittedChangesKey = "hasUncommittedChanges"
 
-    init(isStoredInMemoryOnly: Bool = false, assetName: String = "Farewell-to-Ulster", bundle: Bundle = Bundle.main) throws {
+    /// Creates the storage without loading a book. The app loads one from GitHub if hasBook is false.
+    init(isStoredInMemoryOnly: Bool = false) throws {
         defaults = isStoredInMemoryOnly ? nil : UserDefaults.standard
         hasUncommittedChanges = defaults?.bool(forKey: Self.uncommittedChangesKey) ?? false
         let schema = Schema([
@@ -69,14 +73,22 @@ enum StorageError: LocalizedError, CustomStringConvertible {
         } catch {
             throw StorageError.noModelContainer(underlying: error)
         }
+    }
+
+    /// Creates the storage and loads the book from an asset if there isn't one yet. Used by previews and tests.
+    convenience init(isStoredInMemoryOnly: Bool = false, assetName: String, bundle: Bundle = Bundle.main) throws {
+        try self.init(isStoredInMemoryOnly: isStoredInMemoryOnly)
         // Errors are passed on as they are, so the message shows what actually went wrong.
         try loadData(assetName: assetName, bundle: bundle)
     }
-    
+
+    /// True when the storage already holds a book, so nothing needs to be loaded.
+    func hasBook() throws -> Bool {
+        try container.mainContext.fetchCount(FetchDescriptor<Book>()) > 0
+    }
+
     func loadData(assetName: String, bundle: Bundle = Bundle.main) throws {
-        let descriptor = FetchDescriptor<Book>()
-        let booksCount = try container.mainContext.fetchCount(descriptor)
-        guard booksCount == 0 else { return }
+        guard try !hasBook() else { return }
         guard let asset = NSDataAsset(name: assetName, bundle: bundle) else { throw StorageError.missingAsset(name: assetName) }
         let jsonBook: JSONBook
         do {
@@ -84,7 +96,25 @@ enum StorageError: LocalizedError, CustomStringConvertible {
         } catch {
             throw StorageError.invalidAsset(name: assetName, underlying: error)
         }
-        
+        try insert(jsonBook)
+    }
+
+    /// Loads the book from the JSON committed to GitHub, if there isn't one yet.
+    /// Saves directly rather than through save(), so a freshly loaded book isn't flagged as having uncommitted changes.
+    func loadData(gitHubFile data: Data, path: String) throws {
+        guard try !hasBook() else { return }
+        let jsonBook: JSONBook
+        do {
+            jsonBook = try JSONDecoder().decode(JSONBook.self, from: data)
+        } catch {
+            throw StorageError.invalidGitHubFile(path: path, underlying: error)
+        }
+        try insert(jsonBook)
+        hasUncommittedChanges = false
+    }
+
+    /// Inserts a decoded book with its eras, events, subjects and poems, links the poems, and saves.
+    private func insert(_ jsonBook: JSONBook) throws {
         let context = container.mainContext
         context.insert(jsonBook.book)
 

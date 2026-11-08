@@ -8,6 +8,7 @@
 import Foundation
 import Testing
 import SwiftData
+import UIKit
 @testable import FarewellToUlster
 
 struct StorageTests {
@@ -141,5 +142,49 @@ struct StorageTests {
         let descriptor = FetchDescriptor<Poem>(predicate: #Predicate { $0.uuid == uuid })
         let savedPoem = try #require(try otherContext.fetch(descriptor).first)
         #expect(savedPoem.title == "Saved title")
+    }
+
+    /// The JSON the app would download from GitHub, taken from a test asset.
+    private func gitHubFile(_ assetName: String) throws -> Data {
+        let bundle = try #require(Bundle(identifier: "org.michaelthscott.FarewellToUlsterTests"))
+        return try #require(NSDataAsset(name: assetName, bundle: bundle)).data
+    }
+
+    @Test func testStorageStartsWithoutBook() throws {
+        let storage = try Storage(isStoredInMemoryOnly: true)
+        #expect(try !storage.hasBook())
+    }
+
+    @Test func testLoadFromGitHubFile() throws {
+        let storage = try Storage(isStoredInMemoryOnly: true)
+        try storage.loadData(gitHubFile: try gitHubFile("SmallBook"), path: GitHubClient.bookPath)
+        #expect(try storage.hasBook())
+        #expect(storage.book?.title == "The Blue Dawn")
+        #expect(storage.poems.count == 6)
+        // The book matches what's on GitHub, so it isn't flagged as having uncommitted changes.
+        #expect(!storage.hasUncommittedChanges)
+        #expect(!storage.container.mainContext.hasChanges)
+    }
+
+    @Test func testLoadFromGitHubFileKeepsExistingBook() throws {
+        let storage = try #require(Storage.testStorage(with: "SmallBook"))
+        try storage.loadData(gitHubFile: try gitHubFile("EmptyBook"), path: GitHubClient.bookPath)
+        #expect(storage.book?.title == "The Blue Dawn")
+        #expect(storage.poems.count == 6)
+    }
+
+    @Test func testInvalidGitHubFileError() throws {
+        let storage = try Storage(isStoredInMemoryOnly: true)
+        let error = try #require(throws: StorageError.self) {
+            try storage.loadData(gitHubFile: try gitHubFile("NoBook"), path: GitHubClient.bookPath)
+        }
+        guard case .invalidGitHubFile(let path, let underlying) = error else {
+            Issue.record("Expected invalidGitHubFile, got \(error)")
+            return
+        }
+        #expect(path == GitHubClient.bookPath)
+        #expect(underlying is DecodingError)
+        #expect(error.description.hasPrefix("Could not decode _data/Farewell-to-Ulster.json from GitHub: "))
+        #expect(try !storage.hasBook())
     }
 }

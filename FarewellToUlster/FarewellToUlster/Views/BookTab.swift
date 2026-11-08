@@ -159,12 +159,11 @@ struct BookTab: View {
 
         let data = jsonFile.document.data
 
-        // The canonical copy lives with the site. The app's bundled copy is only a
-        // first-launch seed, refreshed from here by scripts/refresh-seed.sh.
-        let localFile = LocalFile(path: "_data/Farewell-to-Ulster.json", content: data)
-        
+        // The only copy of the book lives with the site. The app loads it from there when there is no book.
+        let localFile = LocalFile(path: GitHubClient.bookPath, content: data)
+
         var localFiles: [LocalFile] = [localFile]
-        let client = GitHubClient(owner: "michaelthscott", repo: "Farewell-to-Ulster", branch: "main")
+        let client = GitHubClient.site
         do {
             let sha = try await client.batchCommit(files: localFiles, message: "Editor update for JSON file")
             outcome.record(target: "JSON file", commitSHA: sha)

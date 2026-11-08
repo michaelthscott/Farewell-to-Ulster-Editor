@@ -50,7 +50,7 @@ Release:
 
 - [ ] In the app on the iPhone, commit any updates you want to keep safe on GitHub. They go to the site repo, [Farewell-to-Ulster](https://github.com/michaelthscott/Farewell-to-Ulster). Installing keeps the app's data, but it's good to have a copy.
 - [ ] Unlock the iPhone and keep it connected by cable or on the same Wi-Fi as the Mac.
-- [ ] Run `scripts/release.sh x.y.z`. It refreshes the bundled seed data from the site repo (committing it if it changed), then tests, archives, signs, installs on the iPhone, and tags `editor-vx.y.z`.
+- [ ] Run `scripts/release.sh x.y.z`. It tests, archives, signs, installs on the iPhone, and tags `editor-vx.y.z`.
   - To install on another device, run `DEVICE=<identifier> scripts/release.sh x.y.z`. Find identifiers with `xcrun devicectl list devices`.
 
 Afterwards:
