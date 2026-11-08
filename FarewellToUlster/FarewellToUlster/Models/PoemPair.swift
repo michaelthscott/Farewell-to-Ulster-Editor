@@ -7,29 +7,35 @@
 
 import Foundation
 
-struct PoemPair {
-    static func pairIdentifier(_ poem1: Poem, _ poem2: Poem) -> String {
-        poem1.uuid.uuidString + poem2.uuid.uuidString
-    }
-    
-    let poem1: Poem
-    let poem2: Poem
+/// Two similar poems, identified by UUID. The UUIDs are stored in order, so the pair is the same whichever poem comes first.
+nonisolated struct PoemPair: Sendable {
+    let uuid1: UUID
+    let uuid2: UUID
     let similarity: Float
+
+    init(_ first: UUID, _ second: UUID, similarity: Float) {
+        if first.uuidString <= second.uuidString {
+            uuid1 = first
+            uuid2 = second
+        } else {
+            uuid1 = second
+            uuid2 = first
+        }
+        self.similarity = similarity
+    }
 }
 
-extension PoemPair: Identifiable {
+nonisolated extension PoemPair: Identifiable {
     var id: String {
-        Self.pairIdentifier(poem1, poem2)
+        uuid1.uuidString + uuid2.uuidString
     }
 }
 
-extension PoemPair: Comparable {
-    static func < (lhs: PoemPair, rhs: PoemPair) -> Bool {
-        lhs.similarity > rhs.similarity
+nonisolated extension PoemPair: Hashable {
+    static func == (lhs: PoemPair, rhs: PoemPair) -> Bool {
+        lhs.id == rhs.id
     }
-}
 
-extension PoemPair: Hashable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }

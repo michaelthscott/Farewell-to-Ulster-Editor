@@ -7,6 +7,15 @@ Versions follow [Semantic Versioning](https://semver.org): MAJOR.MINOR.PATCH. Ea
 
 ## [Unreleased]
 
+### Added
+
+- A "Similar Poems" section at the bottom of each era's page lists pairs of poems in that era that may repeat a memory, most similar first, as a backlog for review. Tapping a pair shows the two titles, each linking to its poem's editor. The list recalculates when poems or the threshold change, and is hidden when there are no pairs. Before comparing, the average of every poem in the book is subtracted, so the voice and themes common to the whole book don't make every pair look similar.
+- A Settings screen, in place of the "GitHub Token" menu item, with the similarity threshold (0.25–0.70, default 0.40) and a link to the GitHub token. It warns when the device doesn't have the English sentence embedding.
+
+### Changed
+
+- `PoemSimilarity` is an actor that caches each poem's embedding until its text changes, and no longer crashes when fewer than two poems can be embedded. A `PoemPair` is the same whichever poem comes first.
+
 ## [2.1.0]
 
 ### Changed

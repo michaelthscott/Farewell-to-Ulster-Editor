@@ -7,18 +7,18 @@
 
 import SwiftUI
 
+/// Two similar poems, each linking to its editor, to be merged or differentiated.
 struct PoemPairView: View {
-    let pair: PoemPair
-    
+    let poem1: Poem
+    let poem2: Poem
+
     var body: some View {
         List {
-            ForEach(([pair.poem1, pair.poem2])) { poem in
-                Text(poem.title)
-                    .font(.title)
-                Text(poem.text)
-                    .font(.body)
+            ForEach([poem1, poem2]) { poem in
+                NavigationLink(poem.title, value: Path.poem(poem))
             }
         }
+        .navigationTitle("Similar Poems")
     }
 }
 
@@ -26,7 +26,13 @@ struct PoemPairView: View {
 #Preview(traits: .sampleData) {
     @Previewable @State var navigation = Navigation()
     @Previewable @Environment(Storage.self) var storage
-    let pairs = PoemSimilarity(threshold: 0.5).similarPoemPairs(poems: try! storage.fetchPoems())
-    PoemPairView(pair: pairs.first!)
+    let poems = try! storage.fetchPoems()
+    NavigationStack {
+        PoemPairView(poem1: poems[0], poem2: poems[1])
+            .navigationDestination(for: Path.self) { path in
+                DestinationView(path: path)
+            }
+            .environment(navigation)
+    }
 }
 #endif

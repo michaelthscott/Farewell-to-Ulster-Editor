@@ -18,7 +18,7 @@ struct BookTab: View {
     @Environment(Storage.self) private var storage
     @State private var export: Export?
     @State private var isCommittingUpdate: Bool = false
-    @State private var showGitHubSettings: Bool = false
+    @State private var showSettings: Bool = false
     @State private var outcome: CommitOutcome?
     @State private var exportError: String?
 
@@ -84,9 +84,9 @@ struct BookTab: View {
                                 Label("Export PDF", systemImage: "square.and.arrow.up")
                             }
                             Button(action: {
-                                showGitHubSettings = true
+                                showSettings = true
                             }) {
-                                Label("GitHub Token", systemImage: "key")
+                                Label("Settings", systemImage: "gear")
                             }
                             Divider()
                             Text(appVersion)
@@ -113,13 +113,13 @@ struct BookTab: View {
                 } message: { message in
                     Text(message)
                 }
-                .sheet(isPresented: $showGitHubSettings) {
+                .sheet(isPresented: $showSettings) {
                     NavigationStack {
-                        GitHubSettingsView()
-                            .navigationTitle("GitHub")
+                        SettingsView()
+                            .navigationTitle("Settings")
                             .toolbar {
                                 ToolbarItem(placement: .confirmationAction) {
-                                    Button("Done") { showGitHubSettings = false }
+                                    Button("Done") { showSettings = false }
                                 }
                             }
                     }

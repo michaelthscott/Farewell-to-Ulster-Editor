@@ -16,6 +16,11 @@ struct EraEditor: View {
     @State private var editedTitle = ""
     @State private var editedText = ""
     @State private var selectedPeriod: DateInterval = .init()
+    @AppStorage(PoemSimilarity.thresholdKey) private var threshold = PoemSimilarity.defaultThreshold
+    // The similar poems section is hidden while there are none.
+    @State private var similarPairs: [PoemPairsList.Pair] = []
+    // Every poem in the book, whose average is subtracted when finding similar poems.
+    @Query private var bookPoems: [Poem]
 
     var body: some View {
         Form {
@@ -24,6 +29,14 @@ struct EraEditor: View {
             }
             PeriodPicker(period: $selectedPeriod)
             TextSection(title: "Text", autocapitalization: .never, text: $editedText)
+            if !similarPairs.isEmpty {
+                PoemPairsList(pairs: similarPairs)
+            }
+        }
+        .task(id: similarityRequest) {
+            let pairs = await PoemPairsList.pairs(in: era.poems ?? [], for: similarityRequest)
+            guard !Task.isCancelled else { return }
+            similarPairs = pairs
         }
         .navigationTitle(Text("Edit Era"))
         .navigationBarBackButtonHidden(needsSave)
@@ -46,6 +59,10 @@ struct EraEditor: View {
     
     var needsSave: Bool {
         era.title != editedTitle || era.period != selectedPeriod || era.text != editedText
+    }
+
+    private var similarityRequest: PoemPairsList.Request {
+        PoemPairsList.Request(poems: era.poems ?? [], bookPoems: bookPoems, threshold: PoemSimilarity.practicalThreshold(threshold))
     }
     
 }

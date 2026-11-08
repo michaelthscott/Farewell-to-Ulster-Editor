@@ -14,6 +14,7 @@ enum Path: Hashable {
     case era(Era)
     case event(Event)
     case subject(Subject)
+    case poemPair(Poem, Poem)
 }
 
 /// Used to specify the navigation destination.
@@ -30,6 +31,8 @@ struct DestinationView: View {
             EventEditor(event: event)
         case .subject(let subject):
             SubjectEditor(subject: subject)
+        case .poemPair(let poem1, let poem2):
+            PoemPairView(poem1: poem1, poem2: poem2)
         }
     }
 }
