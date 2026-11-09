@@ -7,6 +7,12 @@ Versions follow [Semantic Versioning](https://semver.org): MAJOR.MINOR.PATCH. Ea
 
 ## [Unreleased]
 
+## [2.4.0]
+
+### Added
+
+- A pair of similar poems can be marked "Not Duplicate", by swiping it in an era's Similar Poems list or with the button on the pair's page, after confirming an alert. The pair is no longer listed. The mark is kept on both poems as `distinctPoemUUIDs` in the book's JSON, so it is committed with the book and survives reloading it from GitHub. There is no undo in the app; removing the UUIDs from the JSON restores the pair.
+
 ## [2.3.0]
 
 ### Changed
