@@ -37,4 +37,16 @@ struct PoemTests {
         #expect(poems.first?.category == PoemCategory.lament)
     }
 
+    @Test("Marking two poems as not duplicates marks both, once")
+    func testMarkDistinct() {
+        let poem1 = Poem(title: "One")
+        let poem2 = Poem(title: "Two")
+        poem1.markDistinct(from: poem2)
+        poem2.markDistinct(from: poem1)
+        #expect(poem1.distinctPoemUUIDs == [poem2.uuid])
+        #expect(poem2.distinctPoemUUIDs == [poem1.uuid])
+        #expect(poem1.isDistinct(from: poem2.uuid))
+        #expect(poem2.isDistinct(from: poem1.uuid))
+    }
+
 }

@@ -19,8 +19,9 @@ final class JSONPoem {
     var eraUUID: UUID?
     var eventUUIDs: [UUID]?
     var subjectUUIDs: [UUID]?
-    
-    init(fileOrder: String, uuid: UUID, title: String, text: String, scratchpad: String? = nil, status: String? = nil, category: String? = nil, eraUUID: UUID? = nil, eventUUIDs: [UUID]? = nil, subjectUUIDs: [UUID]? = nil) {
+    var distinctPoemUUIDs: [UUID]?
+
+    init(fileOrder: String, uuid: UUID, title: String, text: String, scratchpad: String? = nil, status: String? = nil, category: String? = nil, eraUUID: UUID? = nil, eventUUIDs: [UUID]? = nil, subjectUUIDs: [UUID]? = nil, distinctPoemUUIDs: [UUID]? = nil) {
         self.fileOrder = fileOrder
         self.uuid = uuid
         self.title = title
@@ -31,6 +32,7 @@ final class JSONPoem {
         self.eraUUID = eraUUID
         self.eventUUIDs = eventUUIDs
         self.subjectUUIDs = subjectUUIDs
+        self.distinctPoemUUIDs = distinctPoemUUIDs
     }
     
     var poem: Poem {
@@ -43,6 +45,9 @@ final class JSONPoem {
         }
         if let category {
             poem.category = PoemCategory(rawValue: category)
+        }
+        if let distinctPoemUUIDs {
+            poem.distinctPoemUUIDs = distinctPoemUUIDs
         }
         return poem
     }
@@ -62,7 +67,7 @@ extension JSONPoem: Comparable {
 
 extension JSONPoem: Codable {
     enum CodingKeys: String, CodingKey {
-        case fileOrder, uuid, title, text, scratchpad, status, category, eraUUID, eventUUIDs, subjectUUIDs
+        case fileOrder, uuid, title, text, scratchpad, status, category, eraUUID, eventUUIDs, subjectUUIDs, distinctPoemUUIDs
     }
     
     convenience init(from decoder: any Decoder) throws {
@@ -77,7 +82,8 @@ extension JSONPoem: Codable {
         let eraUUID = try container.decodeIfPresent(UUID.self, forKey: .eraUUID)
         let eventUUIDs = try container.decodeIfPresent([UUID].self, forKey: .eventUUIDs)
         let subjectUUIDs = try container.decodeIfPresent([UUID].self, forKey: .subjectUUIDs)
-        self.init(fileOrder: fileOrder, uuid: uuid, title: title, text: text, scratchpad: scratchpad, status: status, category: category, eraUUID: eraUUID, eventUUIDs: eventUUIDs, subjectUUIDs: subjectUUIDs)
+        let distinctPoemUUIDs = try container.decodeIfPresent([UUID].self, forKey: .distinctPoemUUIDs)
+        self.init(fileOrder: fileOrder, uuid: uuid, title: title, text: text, scratchpad: scratchpad, status: status, category: category, eraUUID: eraUUID, eventUUIDs: eventUUIDs, subjectUUIDs: subjectUUIDs, distinctPoemUUIDs: distinctPoemUUIDs)
     }
     
     func encode(to encoder: any Encoder) throws {
@@ -92,5 +98,6 @@ extension JSONPoem: Codable {
         try container.encodeIfPresent(eraUUID, forKey: .eraUUID)
         try container.encodeIfPresent(eventUUIDs, forKey: .eventUUIDs)
         try container.encodeIfPresent(subjectUUIDs, forKey: .subjectUUIDs)
+        try container.encodeIfPresent(distinctPoemUUIDs, forKey: .distinctPoemUUIDs)
     }
 }

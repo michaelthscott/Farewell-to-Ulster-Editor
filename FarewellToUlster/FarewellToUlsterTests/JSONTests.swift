@@ -51,7 +51,26 @@ struct JSONTests {
         #expect(poem.title == "")
         #expect(poem.text == "")
     }
-    
+
+    @Test("JSONPoem keeps the poems marked as not duplicates")
+    func testPoemDistinctPoemUUIDs() throws {
+        let distinct = [UUID(), UUID()]
+        let poem = JSONPoem(fileOrder: "0001", uuid: UUID(), title: "", text: "", distinctPoemUUIDs: distinct)
+        let decoded = try JSONDecoder().decode(JSONPoem.self, from: JSONEncoder().encode(poem))
+        #expect(decoded.distinctPoemUUIDs == distinct)
+        #expect(decoded.poem.distinctPoemUUIDs == distinct)
+    }
+
+    @Test("JSONPoem leaves out distinctPoemUUIDs when there are none")
+    func testPoemNoDistinctPoemUUIDs() throws {
+        let poem = JSONPoem(fileOrder: "0001", uuid: UUID(), title: "", text: "")
+        let json = try #require(String(data: JSONEncoder().encode(poem), encoding: .utf8))
+        #expect(!json.contains("distinctPoemUUIDs"))
+        let decoded = try JSONDecoder().decode(JSONPoem.self, from: Data(json.utf8))
+        #expect(decoded.distinctPoemUUIDs == nil)
+        #expect(decoded.poem.distinctPoemUUIDs.isEmpty)
+    }
+
     @Test("JSONSubject")
     func testSubject() throws {
         let uuid = UUID()

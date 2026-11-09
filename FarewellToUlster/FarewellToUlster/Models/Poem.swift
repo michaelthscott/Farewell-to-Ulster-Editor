@@ -18,6 +18,9 @@ nonisolated final class Poem: Titled, FileOrdered, SortOrderable {
     var scratchpad: String = ""
     var status: PoemStatus?
     var category: PoemCategory?
+    /// The poems marked as similar to this one but not duplicates of it, so the pair is no longer listed as similar.
+    /// Kept on both poems of the pair.
+    var distinctPoemUUIDs: [UUID] = []
     @Relationship(inverse: \Era.poems) var era: Era?
     @Relationship(inverse: \Event.poems) var events: [Event]?
     @Relationship(inverse: \Subject.poems) var subjects: [Subject]?
@@ -63,6 +66,20 @@ nonisolated final class Poem: Titled, FileOrdered, SortOrderable {
         return subjects.sorted()
     }
     
+    /// Marks this poem and the other as not duplicates of each other, on both poems.
+    func markDistinct(from other: Poem) {
+        if !distinctPoemUUIDs.contains(other.uuid) {
+            distinctPoemUUIDs.append(other.uuid)
+        }
+        if !other.distinctPoemUUIDs.contains(uuid) {
+            other.distinctPoemUUIDs.append(uuid)
+        }
+    }
+
+    func isDistinct(from uuid: UUID) -> Bool {
+        distinctPoemUUIDs.contains(uuid)
+    }
+
     var sortVector: SortVector {
         guard let subjects else { return SortVector(sortIndexes: []) }
         // The sortindexes need to be sorted in ascending order so that the SortVector < will work.

@@ -53,6 +53,9 @@ struct JSONFile {
             if let subjects = poem.subjects, !subjects.isEmpty {
                 jsonPoem.subjectUUIDs = subjects.map(\.uuid).sorted()
             }
+            if !poem.distinctPoemUUIDs.isEmpty {
+                jsonPoem.distinctPoemUUIDs = poem.distinctPoemUUIDs.sorted()
+            }
             return jsonPoem
         }.sorted()
         jsonBook = JSONBook(title: book.title, author: book.author, eras: sortedEras, events: sortedEvents, subjects: sortedSubjects, poems: sortedPoems)

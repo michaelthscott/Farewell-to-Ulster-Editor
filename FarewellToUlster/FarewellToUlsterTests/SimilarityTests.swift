@@ -175,4 +175,19 @@ struct SimilarityTests {
         _ = await similarity.similarPoemPairs(poems: [sea, editedHill], threshold: 0.0)
         #expect(await similarity.embeddedCount == 3)
     }
+
+    @Test("Pairs marked as not duplicates are left out")
+    func testNotDuplicatesLeftOut() async throws {
+        let storage = try #require(Storage.testStorage(with: "SmallBook"))
+        let poems = storage.poems
+        let request = PoemPairsList.Request(poems: poems, bookPoems: poems, threshold: 0.0, subjectWeight: 0)
+        let all = await PoemPairsList.pairs(in: poems, for: request)
+        let marked = try #require(all.first)
+        marked.poem1.markDistinct(from: marked.poem2)
+
+        let markedRequest = PoemPairsList.Request(poems: poems, bookPoems: poems, threshold: 0.0, subjectWeight: 0)
+        #expect(markedRequest != request)
+        let remaining = await PoemPairsList.pairs(in: poems, for: markedRequest)
+        #expect(remaining.map(\.id) == all.dropFirst().map(\.id))
+    }
 }
