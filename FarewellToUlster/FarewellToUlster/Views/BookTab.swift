@@ -16,7 +16,6 @@ import UniformTypeIdentifiers
 struct BookTab: View {
     @Environment(Navigation.self) private var navigation
     @Environment(Storage.self) private var storage
-    @Environment(CommitUpdate.self) private var commitUpdate
     @State private var export: Export?
     @State private var showSettings: Bool = false
     @State private var exportError: String?
@@ -58,14 +57,6 @@ struct BookTab: View {
                 .toolbar {
                     ToolbarItem(placement: .primaryAction) {
                         Menu {
-                            Button(action: {
-                                Task {
-                                    await commitUpdate.commit(storage: storage)
-                                }
-                            }) {
-                                Label("Commit update", systemImage: "square.and.arrow.down")
-                            }
-                            .disabled(commitUpdate.isCommitting)
                             Button(action: {
                                 Task {
                                     await exportPDF()
@@ -135,6 +126,5 @@ struct BookTab: View {
     @Previewable @State var navigation = Navigation()
     BookTab()
         .environment(navigation)
-        .environment(CommitUpdate())
 }
 #endif
