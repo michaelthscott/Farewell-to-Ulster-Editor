@@ -12,6 +12,7 @@ import SwiftData
 struct ContentView: View {
     @Environment(Navigation.self) private var navigation
     @Environment(Storage.self) private var storage
+    @State private var commitUpdate = CommitUpdate()
 
     var body: some View {
         @Bindable var navigation = navigation
@@ -19,10 +20,6 @@ struct ContentView: View {
             Tab("Book", systemImage: "book", value: TabValue.book) {
                 BookTab()
             }
-            .badge(
-                // Tab badges don't draw symbols, so a white ✕ on the red badge stands in for x.circle.fill.
-                storage.hasUncommittedChanges ? Text("✕") : nil
-            )
             Tab("Eras", systemImage: "calendar", value: TabValue.eras) {
                 ErasTab()
             }
@@ -46,6 +43,15 @@ struct ContentView: View {
             }
         }
         .tabBarMinimizeBehavior(.onScrollDown)
+        .tabViewBottomAccessory(isEnabled: storage.hasUncommittedChanges || commitUpdate.isCommitting) {
+            CommitAccessory()
+        }
+        .environment(commitUpdate)
+        .alert(commitUpdate.outcome?.title ?? "", isPresented: showOutcome, presenting: commitUpdate.outcome) { _ in
+            Button("OK", role: .cancel) { }
+        } message: { outcome in
+            Text(outcome.message)
+        }
         .alert("Save failed: \(storage.saveError?.localizedDescription ?? "")", isPresented: saveFailed) {
             Button("Ok", role: .cancel) {
                 storage.saveError = nil
@@ -63,6 +69,14 @@ struct ContentView: View {
         } message: {
             Text(loadWarningsMessage)
         }
+    }
+
+    /// Drives the commit outcome alert, clearing the outcome when the alert is dismissed.
+    private var showOutcome: Binding<Bool> {
+        Binding(
+            get: { commitUpdate.outcome != nil },
+            set: { if !$0 { commitUpdate.outcome = nil } }
+        )
     }
 
     /// Presents the alert while Storage holds a save error, and clears the error when the alert is dismissed.
