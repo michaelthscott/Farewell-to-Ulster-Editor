@@ -20,7 +20,6 @@ struct EditorCancel: ToolbarContent {
                 }
             }
             .disabled(!needsSave)
-            .opacity(needsSave ? 1 : 0.75)
         }
     }
 }
