@@ -7,6 +7,13 @@ Versions follow [Semantic Versioning](https://semver.org): MAJOR.MINOR.PATCH. Ea
 
 ## [Unreleased]
 
+## [2.5.0]
+
+### Changed
+
+- Uncommitted changes are shown in a bar above the tab bar on every tab, with a Commit button, in place of the ✕ badge on the Book tab. The bar shows the commit in progress, in place of the full-screen overlay, and the outcome alert appears on whichever tab is open. "Commit update" is removed from the Book tab's menu.
+- The app makes better use of Liquid Glass. Lists scroll under the tab bar, which shrinks when scrolling down. Editors have a prominent Save button, with Delete in its own group. The text, picker and subject ordering sheets use standard Cancel and Done (or Save) buttons in place of the up chevron and the subject ordering sheet's custom header.
+
 ## [2.4.0]
 
 ### Added
