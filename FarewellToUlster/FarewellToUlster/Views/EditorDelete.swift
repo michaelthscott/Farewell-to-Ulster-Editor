@@ -23,13 +23,14 @@ struct EditorDelete: ToolbarContent {
     }
 
     var body: some ToolbarContent {
+        // Keeps Delete in its own glass group, apart from Save.
+        ToolbarSpacer(.fixed, placement: .destructiveAction)
         ToolbarItem(placement: .destructiveAction) {
             Button("Delete", role: .destructive) {
                 withAnimation {
                     confirmDelete.toggle()
                 }
             }
-            .foregroundColor(.red)
             .confirmationDialog("Delete \(String(describing: item.self))?", isPresented: $confirmDelete) {
                 Button("Delete", role: .destructive) {
                     withAnimation {

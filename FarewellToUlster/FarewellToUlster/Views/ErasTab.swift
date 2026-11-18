@@ -52,7 +52,6 @@ struct ErasTab: View {
             }
             .navigationTitle("Eras")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackgroundVisibility(.visible, for: .tabBar)
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Button(action: addEra) {

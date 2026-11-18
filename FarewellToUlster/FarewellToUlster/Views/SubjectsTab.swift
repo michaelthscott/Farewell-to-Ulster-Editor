@@ -63,7 +63,6 @@ struct SubjectsTab: View {
                 }
                 .navigationTitle("Subjects")
                 .navigationBarTitleDisplayMode(.inline)
-                .toolbarBackgroundVisibility(.visible, for: .tabBar)
                 .toolbar {
                     ToolbarItem(placement: .primaryAction) {
                         Button(action: addSubject) {

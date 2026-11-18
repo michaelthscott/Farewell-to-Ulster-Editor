@@ -47,20 +47,15 @@ struct ItemsPickerSheet<Item: Identifiable & Equatable & Titled>: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button(action: {
+                    Button("Cancel", role: .cancel) {
                         selection = originalSelection
                         dismiss()
-                    }, label: {
-                        Text("Cancel")
-                            .textCase(.none)
-                    })
+                    }
                 }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button(action: {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done", role: .confirm) {
                         dismiss()
-                    }, label: {
-                        Image(systemName: "chevron.up")
-                    })
+                    }
                 }
             }
             .onAppear() {

@@ -15,16 +15,16 @@ struct EditorSave: ToolbarContent {
     let save: () -> Void
 
     var body: some ToolbarContent {
-        ToolbarItem(placement: .destructiveAction) {
-            Button("Save", role: .destructive) {
+        ToolbarItem(placement: .confirmationAction) {
+            Button("Save") {
                 withAnimation {
                     save()
                     // Write the edits now, rather than leaving them to autosave.
                     storage.save()
                 }
             }
+            .buttonStyle(.glassProminent)
             .disabled(!needsSave)
-            .opacity(needsSave ? 1 : 0.75)
         }
     }
 }

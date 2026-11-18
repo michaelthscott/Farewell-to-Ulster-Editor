@@ -45,6 +45,7 @@ struct ContentView: View {
                 PoemsTab()
             }
         }
+        .tabBarMinimizeBehavior(.onScrollDown)
         .alert("Save failed: \(storage.saveError?.localizedDescription ?? "")", isPresented: saveFailed) {
             Button("Ok", role: .cancel) {
                 storage.saveError = nil

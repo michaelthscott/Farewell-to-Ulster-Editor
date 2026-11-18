@@ -32,20 +32,15 @@ struct TextSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar(content: {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button(action: {
+                    Button("Cancel", role: .cancel) {
                         text = originalText
                         dismiss()
-                    }, label: {
-                        Text("Cancel")
-                            .textCase(.none)
-                    })
+                    }
                 }
-                ToolbarItem(placement: .destructiveAction) {
-                    Button(action: {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done", role: .confirm) {
                         dismiss()
-                    }, label: {
-                        Image(systemName: "chevron.up")
-                    })
+                    }
                 }
             })
         }

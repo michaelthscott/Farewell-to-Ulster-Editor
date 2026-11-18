@@ -11,45 +11,39 @@ import SwiftData
 struct SubjectsOrderingSheet: View {
     @Environment(Storage.self) private var storage
     @Query private var allSubjects: [Subject]
-    @Environment(\.editMode) var editMode
     @Environment(\.dismiss) private var dismiss
     @State private var subjects: [Subject] = []
     @State private var initialSortedSubjects: [Subject] = []
 
     var body: some View {
-        VStack(spacing: 0) {
-            HStack {
-                Button(action: {
-                    _subjects.wrappedValue = initialSortedSubjects
-                    dismiss()
-                }, label: {
-                    Text("Cancel")
-                })
-                .padding()
-                Spacer()
-                Text("Subject Order")
-                    .bold(true)
-                    .padding()
-                Spacer()
-                Button(action: {
-                    for index in subjects.indices {
-                        subjects[index].sortIndex = index
-                    }
-                    storage.save()
-                    dismiss()
-                }, label: {
-                    Text("Save")
-                })
-                .padding()
-            }
-            .background(.quinary)
+        NavigationStack {
             List($subjects, editActions: .move) { $subject in
                 Text(subject.title)
             }
             .listStyle(.plain)
+            // Always in edit mode, so the subjects can be dragged straight away.
+            .environment(\.editMode, .constant(.active))
+            .navigationTitle("Subject Order")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel", role: .cancel) {
+                        _subjects.wrappedValue = initialSortedSubjects
+                        dismiss()
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Save", role: .confirm) {
+                        for index in subjects.indices {
+                            subjects[index].sortIndex = index
+                        }
+                        storage.save()
+                        dismiss()
+                    }
+                }
+            }
         }
         .onAppear() {
-            editMode?.wrappedValue = .active
             // Sorting by title first keeps subjects with the same sortIndex in title order.
             initialSortedSubjects = allSubjects.sorted().sorted(using: [SortDescriptor(\.sortIndex)])
             subjects = initialSortedSubjects

@@ -45,7 +45,6 @@ struct PoemsTab: View {
             }
             .navigationTitle(title)
             .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackgroundVisibility(.visible, for: .tabBar)
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Button(action: addPoem) {

@@ -45,7 +45,6 @@ struct EventsTab: View {
             }
             .navigationTitle("Events")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackgroundVisibility(.visible, for: .tabBar)
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Button(action: addEvent) {
