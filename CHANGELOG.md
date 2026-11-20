@@ -7,6 +7,16 @@ Versions follow [Semantic Versioning](https://semver.org): MAJOR.MINOR.PATCH. Ea
 
 ## [Unreleased]
 
+## [2.6.0]
+
+### Added
+
+- A "non-empty scratchpad" search token, under Other in the Poems tab, lists the poems whose scratchpad has something in it. A scratchpad holding only whitespace counts as empty.
+
+### Changed
+
+- An era's Similar Poems section is always shown. It shows a spinner while similar poems are found, and "No Similar Poems" when there are none.
+
 ## [2.5.0]
 
 ### Changed
