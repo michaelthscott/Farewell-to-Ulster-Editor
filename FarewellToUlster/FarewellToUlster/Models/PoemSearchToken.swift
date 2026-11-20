@@ -13,6 +13,7 @@ enum PoemSearchToken {
     internal static let firstLineTitleString = "first line title"
     internal static let uncategorisedString = "uncategorised"
     internal static let noSubjectsString = "no subjects"
+    internal static let nonEmptyScratchpadString = "non-empty scratchpad"
 
     case category(PoemCategory)
     case status(PoemStatus)
@@ -20,6 +21,7 @@ enum PoemSearchToken {
     case noSubjects
     case duplicateTitle
     case firstLineTitle
+    case nonEmptyScratchpad
 }
 
 extension PoemSearchToken: CaseIterable {
@@ -32,7 +34,7 @@ extension PoemSearchToken: CaseIterable {
     }
 
     static var otherCases: [PoemSearchToken] {
-        [.uncategorised, .noSubjects, .duplicateTitle, .firstLineTitle]
+        [.uncategorised, .noSubjects, .duplicateTitle, .firstLineTitle, .nonEmptyScratchpad]
     }
 
     static var allCases: [PoemSearchToken] {
@@ -53,6 +55,8 @@ extension PoemSearchToken: RawRepresentable {
             self = .duplicateTitle
         case Self.firstLineTitleString:
             self = .firstLineTitle
+        case Self.nonEmptyScratchpadString:
+            self = .nonEmptyScratchpad
         case PoemStatus(rawValue: rawValue)?.rawValue:
             guard let status = PoemStatus(rawValue: rawValue) else { return nil }
             self = .status(status)
@@ -78,6 +82,8 @@ extension PoemSearchToken: RawRepresentable {
             return Self.duplicateTitleString
         case .firstLineTitle:
             return Self.firstLineTitleString
+        case .nonEmptyScratchpad:
+            return Self.nonEmptyScratchpadString
         }
     }
 }
@@ -114,6 +120,9 @@ extension PoemSearchToken {
             return poems.filter { titleCounts[$0.title, default: 0] > 1 }
         case .firstLineTitle:
             return poems.filter { $0.titleIsFirstLine }
+        case .nonEmptyScratchpad:
+            // A scratchpad holding only whitespace counts as empty.
+            return poems.filter { !$0.scratchpad.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
         }
     }
 }

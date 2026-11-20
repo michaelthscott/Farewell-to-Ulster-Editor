@@ -13,7 +13,7 @@ struct PoemSearchTokenTests {
     @Test func testAllCases() async throws {
         #expect(PoemSearchToken.allCases == [.status(.undevelopedIdea), .status(.gettingStarted), .status(.inProgress), .status(.almostFinished), .status(.finished), .status(.duplicate),
                                              .category(.complaint), .category(.descriptive), .category(.ironic), .category(.lament), .category(.lyric), .category(.narrative),
-                                             .uncategorised, .noSubjects, .duplicateTitle, .firstLineTitle])
+                                             .uncategorised, .noSubjects, .duplicateTitle, .firstLineTitle, .nonEmptyScratchpad])
     }
 
     @Test func testGroupedCases() {
@@ -30,6 +30,7 @@ struct PoemSearchTokenTests {
     @Test func testRawValue() async throws {
         #expect(PoemSearchToken(rawValue: "") == nil)
         #expect(PoemSearchToken(rawValue: "duplicate title") == .duplicateTitle)
+        #expect(PoemSearchToken(rawValue: "non-empty scratchpad") == .nonEmptyScratchpad)
         #expect(PoemSearchToken(rawValue: PoemStatus.undevelopedIdea.rawValue) == PoemSearchToken.status(.undevelopedIdea))
         #expect(PoemSearchToken(rawValue: PoemCategory.narrative.rawValue) == PoemSearchToken.category(.narrative))
     }
@@ -89,5 +90,15 @@ struct PoemSearchTokenTests {
         let noText = Poem(title: "No text", text: "")
         let found = PoemSearchToken.firstLineTitle.filter([matching, different, noText])
         #expect(found.map(\.uuid) == [matching.uuid])
+    }
+
+    @Test func testFilterNonEmptyScratchpad() {
+        let notes = Poem(title: "Notes")
+        notes.scratchpad = "Try a different ending."
+        let whitespace = Poem(title: "Whitespace")
+        whitespace.scratchpad = " \n"
+        let empty = Poem(title: "Empty")
+        let found = PoemSearchToken.nonEmptyScratchpad.filter([notes, whitespace, empty])
+        #expect(found.map(\.uuid) == [notes.uuid])
     }
 }
