@@ -11,19 +11,29 @@ import SwiftData
 /// A form section listing pairs of similar poems, most similar first, as a backlog for review.
 struct PoemPairsList: View {
     @Environment(Storage.self) private var storage
-    let pairs: [Pair]
+    /// The pairs to list, or nil while they're being found.
+    let pairs: [Pair]?
     // The pair to mark as not duplicates once the alert is confirmed.
     @State private var pairToConfirm: Pair?
 
     var body: some View {
         Section("Similar Poems") {
-            ForEach(pairs) { pair in
-                NavigationLink("\(pair.poem1.title) & \(pair.poem2.title)", value: Path.poemPair(pair.poem1, pair.poem2))
-                    .swipeActions {
-                        Button("Not Duplicate", systemImage: "rectangle.on.rectangle.slash") {
-                            pairToConfirm = pair
+            if let pairs {
+                if pairs.isEmpty {
+                    Text("No Similar Poems")
+                        .foregroundStyle(.secondary)
+                }
+                ForEach(pairs) { pair in
+                    NavigationLink("\(pair.poem1.title) & \(pair.poem2.title)", value: Path.poemPair(pair.poem1, pair.poem2))
+                        .swipeActions {
+                            Button("Not Duplicate", systemImage: "rectangle.on.rectangle.slash") {
+                                pairToConfirm = pair
+                            }
                         }
-                    }
+                }
+            } else {
+                ProgressView()
+                    .frame(maxWidth: .infinity)
             }
         }
         .alert("Not Duplicate?", isPresented: Binding(get: { pairToConfirm != nil }, set: { if !$0 { pairToConfirm = nil } }), presenting: pairToConfirm) { pair in
@@ -96,7 +106,7 @@ struct PoemPairsList: View {
 #Preview(traits: .sampleData) {
     @Previewable @State var navigation = Navigation()
     @Previewable @Environment(Storage.self) var storage
-    @Previewable @State var pairs: [PoemPairsList.Pair] = []
+    @Previewable @State var pairs: [PoemPairsList.Pair]?
     let poems = try! storage.fetchPoems()
     NavigationStack {
         Form {
